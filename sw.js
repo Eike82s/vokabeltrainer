@@ -1,6 +1,7 @@
 // Netzwerk zuerst, bei Offline der zuletzt geladene Stand aus dem Cache.
-const CACHE = 'vokabeltrainer-v2';
-const SHELL = ['./', 'index.html', 'manifest.webmanifest', 'icon.svg', 'icon-192.png', 'icon-512.png', 'decks/index.json'];
+// Hier liegen nur die App-Dateien – Listen und Statistik speichert die App im localStorage.
+const CACHE = 'vokabeltrainer-v3';
+const SHELL = ['./', 'index.html', 'manifest.webmanifest', 'icon.svg', 'icon-192.png', 'icon-512.png'];
 self.addEventListener('install', e => { e.waitUntil(caches.open(CACHE).then(c => c.addAll(SHELL)).catch(() => {})); self.skipWaiting(); });
 self.addEventListener('activate', e => { e.waitUntil(caches.keys().then(k => Promise.all(k.filter(x => x !== CACHE).map(x => caches.delete(x))))); self.clients.claim(); });
 self.addEventListener('fetch', e => {

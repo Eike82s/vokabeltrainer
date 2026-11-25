@@ -25,27 +25,32 @@ html,body{min-height:100%}
 body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.5 "Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",sans-serif;overflow-x:clip;-webkit-tap-highlight-color:transparent}
 #app{max-width:520px;margin:0 auto;min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;padding:calc(env(safe-area-inset-top) + 14px) 18px calc(env(safe-area-inset-bottom) + 24px)}
 #app.tabbed{padding-bottom:calc(env(safe-area-inset-bottom) + 92px)}
-h1{font-size:30px;line-height:1.08;margin:6px 0 18px;text-wrap:balance}
+h1{font-size:26px;line-height:1.1;margin:4px 0 16px;text-wrap:balance}
 h2{font-size:18px;margin:26px 0 8px}
 button,input,select,textarea{font:inherit;color:inherit}
 button{cursor:pointer}
-.top{display:flex;justify-content:space-between;align-items:center;gap:12px;min-height:44px;margin-bottom:6px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;min-height:40px;margin-bottom:4px}
 .chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:999px;padding:6px 14px;background:var(--bg);font-size:15px;min-height:40px}
-.chip svg{width:18px;height:18px}
-.btn{display:flex;align-items:center;justify-content:center;width:100%;min-height:52px;border-radius:14px;border:1px solid var(--line);background:var(--bg);font-weight:700;font-size:17px;padding:12px 16px;text-decoration:none;color:inherit}
+.btn{display:flex;align-items:center;justify-content:center;width:100%;min-height:52px;border-radius:14px;border:1px solid var(--line);background:var(--bg);font-weight:700;font-size:17px;padding:12px 16px;text-decoration:none;color:inherit;text-align:center}
 .btn.pri{background:var(--acc);color:light-dark(#fff,#0d1130);border-color:var(--acc)}
-.btn.lnk{border:0;background:none;color:var(--acc);font-weight:400;min-height:44px;width:auto;padding:8px 0}
+.btn.sm{min-height:44px;font-size:15px;font-weight:400;padding:8px 12px;border-radius:12px;width:auto}
+.btn.danger{color:var(--bad);border-color:var(--bad)}
 .btn+.btn{margin-top:10px}
 :focus-visible{outline:3px solid var(--acc);outline-offset:2px}
 .deck{display:block;width:100%;text-align:left;border:1px solid var(--line);border-radius:14px;padding:14px 16px;background:var(--bg);margin-bottom:10px}
 .deck.on{border:2px solid var(--acc);padding:13px 15px}
-.deck b{display:block;font-size:17px}
+.deck b{display:block;font-size:17px;overflow-wrap:anywhere}
 .deck small,.mut{color:var(--mut);font-size:14px}
+.lcard{border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-bottom:10px}
+.lcard b{display:block;font-size:17px;overflow-wrap:anywhere}
+.lcard .acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.lcard .acts .btn{margin:0;flex:1 1 auto}
+.lcard.arch{background:var(--card);border-color:transparent}
 .seg{display:flex;gap:4px;background:var(--card);padding:4px;border-radius:12px;margin:6px 0 22px}
 .seg button{flex:1;border:0;background:none;border-radius:9px;min-height:44px;font-size:15px;white-space:nowrap}
 .seg button.on{background:var(--bg);font-weight:700;box-shadow:0 0 0 1px var(--line)}
 label{display:block;font-size:14px;color:var(--mut);margin:16px 0 6px}
-input,textarea,select{width:100%;font-size:17px;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+input,textarea{width:100%;font-size:17px;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
 input[type=file]{font-size:15px;padding:10px}
 textarea{min-height:220px;font-size:16px;line-height:1.5;resize:vertical}
 .bar{height:6px;background:var(--card);border-radius:3px;overflow:hidden;margin-top:6px}
@@ -54,14 +59,14 @@ textarea{min-height:220px;font-size:16px;line-height:1.5;resize:vertical}
 .q-word{font-size:clamp(30px,9vw,44px);line-height:1.12;font-weight:700;text-align:center;margin:8px 0 clamp(16px,3vh,28px);overflow-wrap:anywhere;text-wrap:balance}
 .ans{font-size:21px;padding:14px 16px;text-align:center;border-width:2px}
 .ans:focus-visible{outline:none;border-color:var(--acc)}.ans.ok{border-color:var(--ok)}.ans.bad{border-color:var(--bad)}.ans.warn{border-color:var(--warn)}
+.ans.done{caret-color:transparent}
+.qbtns{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px;margin-top:12px}.qbtns .btn+.btn{margin-top:0}
 .fb{border-radius:12px;padding:12px 14px;margin-top:12px;font-size:16px;animation:pop .2s ease}
 .fb.ok{background:var(--okbg);color:var(--ok)}.fb.bad{background:var(--badbg);color:var(--bad)}.fb.warn{background:var(--warnbg);color:var(--warn)}
 .fb strong{display:block;font-size:22px;color:var(--ink);margin-top:2px;overflow-wrap:anywhere}
 @keyframes pop{from{transform:translateY(4px);opacity:0}to{transform:none;opacity:1}}
-.err{color:var(--bad);font-size:14px;margin-top:6px;min-height:0}
+.err{color:var(--bad);font-size:14px;margin-top:6px}
 .grow{flex:1;min-height:20px}
-.qbtns{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px;margin-top:12px}.qbtns .btn+.btn{margin-top:0}
-.ans.done{caret-color:transparent}
 .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 .kpi{background:var(--card);border-radius:12px;padding:12px 14px}
 .kpi small{display:block;color:var(--mut);font-size:13px}.kpi b{font-size:26px}
@@ -72,15 +77,13 @@ textarea{min-height:220px;font-size:16px;line-height:1.5;resize:vertical}
 .sc{flex:none;min-width:36px;text-align:center;border-radius:8px;padding:2px 8px;font-weight:700;font-size:14px;font-variant-numeric:tabular-nums}
 .s1{background:var(--okbg);color:var(--ok)}.s3{background:var(--warnbg);color:var(--warn)}.s5,.s10{background:var(--badbg);color:var(--bad)}
 .fb .sc{float:right;margin-left:8px}
+.tag{font-size:12px;border-radius:6px;padding:1px 7px;margin-left:6px;vertical-align:2px;background:var(--warnbg);color:var(--warn)}
 .tabs{position:fixed;left:0;right:0;bottom:0;background:var(--bg);border-top:1px solid var(--line);display:flex;justify-content:center;padding-bottom:env(safe-area-inset-bottom);z-index:5}
 .tabs button{flex:1;max-width:174px;border:0;background:none;min-height:62px;font-size:13px;color:var(--mut);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px}
 .tabs button.on{color:var(--acc);font-weight:700}
 .tabs svg{width:24px;height:24px}
-.row2{display:flex;gap:10px;align-items:flex-end}.row2>*{flex:1}
-.pill{font-size:12px;background:var(--accbg);color:var(--acc);border-radius:6px;padding:1px 7px;margin-left:8px;vertical-align:2px;font-weight:400}
-.prof{display:flex;gap:8px;align-items:center;border:1px solid var(--line);border-radius:14px;padding:8px 8px 8px 14px;margin-bottom:10px}
-.prof.on{border:2px solid var(--acc);padding:7px 7px 7px 13px}
-.prof .name{flex:1;text-align:left;border:0;background:none;font-size:17px;min-height:44px;padding:0}
+.row2{display:flex;gap:10px}.row2>*{flex:1}
+.empty{background:var(--card);border-radius:14px;padding:18px;text-align:center}
 .hidden{display:none!important}
 @media (prefers-reduced-motion:reduce){.bar i{transition:none}.fb{animation:none}}
 </style>
@@ -89,72 +92,51 @@ textarea{min-height:220px;font-size:16px;line-height:1.5;resize:vertical}
 <main id="app"><p class="mut">Lädt …</p></main>
 <script>
 {
-const KEY = 'vokabeltrainer.v1';
+const KEY = 'vokabeltrainer.v2';
 const app = document.getElementById('app');
 const $ = s => document.querySelector(s);
-const uid = () => Math.random().toString(36).slice(2, 10);
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+const now = () => new Date().toISOString();
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const avg = a => a.length ? a.reduce((x, y) => x + y, 0) / a.length : 0;
 const fmt = n => n.toLocaleString('de-DE', {minimumFractionDigits: 1, maximumFractionDigits: 1});
-const SAMPLE = `Schmetterling; butterfly
-Gewohnheit; habit
-widerwillig; reluctant
-zuverlässig; reliable
-(sich) erinnern; to remember
-das Gebäude; building
-überraschen; to surprise
-der Nachbar; neighbour/neighbor
-ungefähr; about/approximately
-gelingen; to succeed`;
+const fmtDate = iso => iso ? new Date(iso).toLocaleString('de-DE', {dateStyle: 'medium', timeStyle: 'short'}) : '';
+const fmtDur = ms => { if (!(ms > 0)) return ''; const m = Math.round(ms / 60000); return m < 1 ? 'unter 1 Min.' : m + ' Min.'; };
 
 const ICONS = {
   learn: '<path d="M4 5h11a3 3 0 0 1 3 3v11H7a3 3 0 0 1-3-3z"/><path d="M8 9h6M8 13h4"/>',
-  stats: '<path d="M5 19V11M12 19V5M19 19v-6"/>',
-  user: '<circle cx="12" cy="8" r="3.5"/><path d="M5 20a7 7 0 0 1 14 0"/>'
+  lists: '<path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4.5" cy="6" r="1"/><circle cx="4.5" cy="12" r="1"/><circle cx="4.5" cy="18" r="1"/>',
+  stats: '<path d="M5 19V11M12 19V5M19 19v-6"/>'
 };
 const icon = k => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[k]}</svg>`;
 
-/* ---------- Daten ---------- */
+/* ---------- Daten (nur in diesem Browser, localStorage) ---------- */
 function parseList(text) {
   return String(text).split(/\r?\n/).map(l => l.trim()).filter(l => l && !l.startsWith('#')).map(l => {
     const m = l.match(/^(.*?)\s*(?:\t|;|\s=\s|\s-\s)\s*(.*)$/);
     return m && m[1].trim() && m[2].trim() ? {a: m[1].trim(), b: m[2].trim()} : null;
   }).filter(Boolean);
 }
-function fresh() {
-  const p = {id: uid(), name: 'Ich'};
-  return {profiles: [p], active: p.id, decks: [], sessions: [], settings: {typo: 'retry'}};
-}
 let S = null;
 try { S = JSON.parse(localStorage.getItem(KEY)); } catch (e) {}
-if (!S || !Array.isArray(S.profiles) || !S.profiles.length) S = fresh();
-S.decks ||= []; S.sessions ||= []; S.settings ||= {typo: 'retry'};
-function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
-
-async function loadRepoDecks() {
+if (!S || !Array.isArray(S.decks)) {
+  S = {decks: [], sessions: []};
   try {
-    const r = await fetch('decks/index.json', {cache: 'no-cache'});
-    if (!r.ok) return;
-    const list = await r.json();
-    for (const e of Array.isArray(list) ? list : []) {
-      try {
-        const res = await fetch('decks/' + encodeURI(String(e.file)), {cache: 'no-cache'});
-        if (!res.ok) continue;
-        const cards = parseList(await res.text());
-        const id = 'repo:' + e.file;
-        const obj = {id, repo: true, name: String(e.name || e.file), la: String(e.la || 'Deutsch'), lb: String(e.lb || 'Englisch'), cards};
-        const ex = S.decks.find(d => d.id === id);
-        ex ? Object.assign(ex, obj) : S.decks.push(obj);
-      } catch (x) {}
+    const old = JSON.parse(localStorage.getItem('vokabeltrainer.v1'));
+    if (old && Array.isArray(old.decks)) {
+      S.decks = old.decks.filter(d => !d.repo).map(d => ({id: d.id, name: d.name, la: d.la, lb: d.lb, cards: d.cards, archived: false, created: now(), updated: now()}));
+      S.sessions = (old.sessions || []).map(s => ({id: s.id, deck: s.deck, deckName: s.deckName, la: s.la, lb: s.lb, start: s.date, rounds: s.rounds}));
     }
   } catch (e) {}
 }
+S.sessions ||= [];
+function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
 
-const prof = () => S.profiles.find(p => p.id === S.active) || S.profiles[0];
 const deckById = id => S.decks.find(d => d.id === id);
+const activeDecks = () => S.decks.filter(d => !d.archived);
 const ABBR = {deutsch:'DE', englisch:'EN', französisch:'FR', franzoesisch:'FR', spanisch:'ES', latein:'LA', italienisch:'IT', niederländisch:'NL', russisch:'RU'};
 const ab = n => ABBR[String(n || '').toLowerCase()] || String(n || '?').slice(0, 2).toUpperCase();
-const dirLabel = (d, deck) => d === 'ab' ? ab(deck.la) + ' → ' + ab(deck.lb) : ab(deck.lb) + ' → ' + ab(deck.la);
+const dirLabel = (d, x) => d === 'ab' ? ab(x.la) + ' → ' + ab(x.lb) : ab(x.lb) + ' → ' + ab(x.la);
 
 /* ---------- Antwortprüfung ---------- */
 const ART = /^(der|die|das|den|dem|des|ein|eine|einen|einem|einer|the|a|an|to)\s+/i;
@@ -172,7 +154,7 @@ function norm(s, keepCase) {
 const variants = s => String(s).split('/').map(v => norm(v, true)).filter(Boolean);
 function dist(a, b) {
   const m = a.length, n = b.length, d = [];
-  for (let i = 0; i <= m; i++) { d[i] = [i]; }
+  for (let i = 0; i <= m; i++) d[i] = [i];
   for (let j = 0; j <= n; j++) d[0][j] = j;
   for (let i = 1; i <= m; i++) for (let j = 1; j <= n; j++) {
     const c = a[i - 1] === b[j - 1] ? 0 : 1;
@@ -190,62 +172,76 @@ function check(input, accepted) {
 }
 
 /* ---------- Ansicht & Zustand ---------- */
-let view = 'home', Q = null, selDeck = null, dirMode = 'both', editId = null, confirmKey = null, renId = null, autoTimer = null;
+let view = 'home', Q = null, selDeck = null, dirMode = 'both', editId = null, confirmKey = null, autoTimer = null;
 
 function render() {
   clearTimeout(autoTimer);
-  const tabbed = ['home', 'stats', 'profiles'].includes(view);
-  const html = {home: vHome, edit: vEdit, quiz: vQuiz, round: vRound, stats: vStats, profiles: vProfiles}[view]();
+  const tabbed = ['home', 'lists', 'stats'].includes(view);
+  const html = {home: vHome, lists: vLists, edit: vEdit, quiz: vQuiz, round: vRound, stats: vStats}[view]();
   app.className = tabbed ? 'tabbed' : '';
   app.innerHTML = html + (tabbed ? tabs() : '');
   if (view === 'quiz') fillTask();
   if (view === 'edit') bindEdit();
-  if (view === 'profiles') { const t = $('#typo'); t.value = S.settings.typo; }
   window.scrollTo(0, 0);
 }
+function go(v) { view = v; confirmKey = null; render(); }
 function tabs() {
-  const t = [['home', 'Lernen', 'learn'], ['stats', 'Statistik', 'stats'], ['profiles', 'Profile', 'user']];
+  const t = [['home', 'Lernen', 'learn'], ['lists', 'Listen', 'lists'], ['stats', 'Statistik', 'stats']];
   return `<nav class="tabs" aria-label="Navigation">${t.map(([k, l, i]) => `<button data-act="tab" data-k="${k}" class="${view === k ? 'on' : ''}" ${view === k ? 'aria-current="page"' : ''}>${icon(i)}${l}</button>`).join('')}</nav>`;
 }
-function top(right = '') {
-  return `<div class="top"><span class="mut">Vokabeltrainer</span>${right || `<button class="chip" data-act="tab" data-k="profiles" aria-label="Profil wechseln">${icon('user')} ${esc(prof().name)}</button>`}</div>`;
-}
+const top = (right = '') => `<div class="top"><span class="mut">Vokabeltrainer</span>${right}</div>`;
 
+/* ---------- Lernen ---------- */
 function vHome() {
-  const p = prof();
-  if (!deckById(selDeck)) selDeck = S.decks[0]?.id;
+  const list = activeDecks();
+  if (!list.some(d => d.id === selDeck)) selDeck = list[0]?.id;
   const d = deckById(selDeck);
-  const decks = S.decks.map(x => {
-    const last = S.sessions.filter(s => s.profile === p.id && s.deck === x.id && s.rounds[0]?.length).slice(-1)[0];
+  if (!list.length) return top() + `<h1>Was lernen wir heute?</h1>
+    <div class="empty"><p style="margin:0 0 12px">Noch keine Vokabelliste da.</p><button class="btn pri" data-act="new">Erste Liste anlegen</button></div>`;
+  const decks = list.map(x => {
+    const last = S.sessions.filter(s => s.deck === x.id && s.rounds[0]?.length).slice(-1)[0];
     const info = x.cards.length + ' Vokabeln' + (last ? ' · zuletzt Ø ' + fmt(avg(last.rounds[0].map(r => r.s))) : ' · neu');
-    return `<button class="deck ${x.id === selDeck ? 'on' : ''}" data-act="sel" data-id="${esc(x.id)}" aria-pressed="${x.id === selDeck}"><b>${esc(x.name)}${x.repo ? '<span class="pill">aus dem Repo</span>' : ''}</b><small>${esc(x.la)} – ${esc(x.lb)} · ${info}</small></button>`;
+    return `<button class="deck ${x.id === selDeck ? 'on' : ''}" data-act="sel" data-id="${esc(x.id)}" aria-pressed="${x.id === selDeck}"><b>${esc(x.name)}</b><small>${esc(x.la)} – ${esc(x.lb)} · ${info}</small></button>`;
   }).join('');
-  const n = d ? d.cards.length * (dirMode === 'both' ? 2 : 1) : 0;
-  return top() + `<h1>Was lernen wir heute, ${esc(p.name)}?</h1>
-  ${decks || '<p class="mut">Noch keine Vokabelliste. Leg die erste an.</p>'}
-  <div><button class="btn lnk" data-act="new">+ Neue Liste einfügen</button></div>
-  ${d ? `<label>Abfragerichtung</label>
+  const n = d.cards.length * (dirMode === 'both' ? 2 : 1);
+  return top() + `<h1>Was lernen wir heute?</h1>
+  ${decks}
+  <label>Abfragerichtung</label>
   <div class="seg" role="group">${[['both', 'Beide'], ['ab', dirLabel('ab', d)], ['ba', dirLabel('ba', d)]].map(([k, t]) => `<button data-act="dir" data-k="${k}" class="${dirMode === k ? 'on' : ''}" aria-pressed="${dirMode === k}">${esc(t)}</button>`).join('')}</div>
   <div class="grow"></div>
-  <button class="btn pri" data-act="start" ${n ? '' : 'aria-disabled="true"'}>Run starten · ${n} Aufgaben</button>
-  ${d.repo ? '<p class="mut" style="text-align:center">Diese Liste kommt aus deinem Git-Repo und wird dort bearbeitet.</p>' : `<button class="btn" data-act="edit" data-id="${esc(d.id)}">Liste bearbeiten</button>`}` : ''}`;
+  <button class="btn pri" data-act="start">Run starten · ${n} Aufgaben</button>`;
 }
 
+/* ---------- Listen ---------- */
+function vLists() {
+  const act = S.decks.filter(d => !d.archived), arch = S.decks.filter(d => d.archived);
+  const meta = d => `${esc(d.la)} – ${esc(d.lb)} · ${d.cards.length} Vokabeln`;
+  return top() + `<h1>Listen</h1>
+  <button class="btn pri" data-act="new">+ Neue Liste</button>
+  <h2>Aktuell</h2>
+  ${act.length ? act.map(d => `<div class="lcard"><b>${esc(d.name)}</b><small class="mut">${meta(d)}</small>
+    <div class="acts"><button class="btn sm" data-act="edit" data-id="${esc(d.id)}">Bearbeiten</button><button class="btn sm" data-act="archive" data-id="${esc(d.id)}">Archivieren</button></div></div>`).join('')
+    : '<p class="mut">Keine aktuellen Listen.</p>'}
+  <h2>Archiv</h2>
+  ${arch.length ? arch.map(d => `<div class="lcard arch"><b>${esc(d.name)}</b><small class="mut">${meta(d)}${d.archivedAt ? ' · archiviert am ' + esc(new Date(d.archivedAt).toLocaleDateString('de-DE')) : ''}</small>
+    <div class="acts"><button class="btn sm" data-act="restore" data-id="${esc(d.id)}">Wiederherstellen</button><button class="btn sm danger" data-act="del" data-id="${esc(d.id)}">${confirmKey === 'd' + d.id ? 'Wirklich löschen?' : 'Endgültig löschen'}</button></div></div>`).join('')
+    + '<p class="mut">Archivierte Listen erscheinen nicht unter „Lernen“. Beim endgültigen Löschen bleibt die Statistik erhalten.</p>'
+    : '<p class="mut">Das Archiv ist leer.</p>'}`;
+}
 function vEdit() {
   const d = editId ? deckById(editId) : null;
   const text = d ? d.cards.map(c => c.a + '; ' + c.b).join('\n') : '';
-  return `<div class="top"><button class="chip" data-act="tab" data-k="home">← Zurück</button></div>
+  return `<div class="top"><button class="chip" data-act="tab" data-k="lists">← Listen</button></div>
   <h1>${d ? 'Liste bearbeiten' : 'Neue Liste'}</h1>
   <label for="f-name">Name</label><input id="f-name" value="${esc(d?.name || '')}" placeholder="Englisch Unit 3">
   <div class="row2"><div><label for="f-la">Sprache 1</label><input id="f-la" value="${esc(d?.la || 'Deutsch')}"></div><div><label for="f-lb">Sprache 2</label><input id="f-lb" value="${esc(d?.lb || 'Englisch')}"></div></div>
   <label for="f-list">Vokabeln – eine pro Zeile, getrennt durch ; oder Tab</label>
-  <textarea id="f-list" placeholder="Schmetterling; butterfly&#10;Gewohnheit; habit" autocapitalize="off" autocorrect="off" spellcheck="false">${esc(text)}</textarea>
+  <textarea id="f-list" placeholder="Schmetterling; butterfly&#10;Nachbar; neighbour/neighbor" autocapitalize="off" autocorrect="off" spellcheck="false">${esc(text)}</textarea>
   <p class="mut" id="f-info"></p>
-  <p class="mut">Mehrere richtige Antworten mit / trennen: <i>ungefähr; about/approximately</i>. Teile in Klammern sind optional: <i>(sich) erinnern</i>. Artikel wie der/die/das, the und to muss man nicht mittippen. Groß- und Kleinschreibung zählt, also Nomen groß schreiben.</p>
+  <p class="mut">Mehrere richtige Antworten mit / trennen: <i>Nachbar; neighbour/neighbor</i>. Text in Klammern zählt nicht zur Antwort: <i>(sich) erinnern</i>. Artikel wie der/die/das, the und to muss man nicht mittippen. Groß- und Kleinschreibung zählt.</p>
   <div class="err" id="f-err" role="alert"></div>
   <div class="grow"></div>
-  <button class="btn pri" data-act="saveDeck">Speichern</button>
-  ${!d ? `<button class="btn" data-act="sample">Beispielliste einfügen</button>` : `<button class="btn" data-act="delDeck">${confirmKey === 'd' + d.id ? 'Wirklich löschen? Nochmal tippen' : 'Liste löschen'}</button>`}`;
+  <button class="btn pri" data-act="saveDeck">Speichern</button>`;
 }
 function bindEdit() {
   const ta = $('#f-list'), info = $('#f-info');
@@ -266,12 +262,12 @@ function startRun() {
   const dirs = dirMode === 'both' ? ['ab', 'ba'] : [dirMode];
   const tasks = [];
   d.cards.forEach((c, i) => dirs.forEach(x => tasks.push({i, d: x})));
-  const ses = {id: uid(), profile: S.active, deck: d.id, deckName: d.name, la: d.la, lb: d.lb, date: new Date().toISOString(), rounds: [[]]};
+  const ses = {id: uid(), deck: d.id, deckName: d.name, la: d.la, lb: d.lb, dirs: dirMode, start: now(), end: null, aborted: false, rounds: [[]]};
   S.sessions.push(ses); save();
   Q = {deck: d, ses, round: 1, tasks: spread(shuffle(tasks)), pos: 0};
   resetTask(); view = 'quiz'; render();
 }
-function resetTask() { Q.attempt = 0; Q.given = []; Q.done = false; }
+function resetTask() { Q.attempt = 0; Q.given = []; Q.done = false; Q.t0 = Date.now(); }
 const card = t => Q.deck.cards[t.i];
 const promptOf = t => t.d === 'ab' ? card(t).a : card(t).b;
 const solution = t => t.d === 'ab' ? card(t).b : card(t).a;
@@ -281,7 +277,6 @@ function accepted(t) {
   Q.deck.cards.forEach(x => { if (norm(x[from]) === key) variants(x[to]).forEach(v => set.add(v)); });
   return [...set];
 }
-
 function vQuiz() {
   return `<div class="top"><button class="chip" data-act="quit">✕ Beenden</button><span class="mut" id="q-count"></span></div>
   <div class="bar"><i id="q-bar" style="width:0"></i></div>
@@ -292,7 +287,7 @@ function vQuiz() {
   <div class="qbtns"><button class="btn pri" id="qbtn" data-act="qmain" type="button">Prüfen</button>
   <button class="btn" id="qdk" data-act="dunno" type="button">Ich weiß es nicht</button></div>
   <div id="fb" aria-live="polite"></div>
-  <p class="mut" id="q-hint" style="text-align:center;margin-top:18px">Tastatur weg? Tippe aufs Eingabefeld.</p>`;
+  <p class="mut" style="text-align:center;margin-top:18px">Tastatur weg? Tippe aufs Eingabefeld.</p>`;
 }
 function fillTask() {
   const t = Q.tasks[Q.pos];
@@ -308,23 +303,18 @@ function fillTask() {
   inp.focus({preventScroll: true});
 }
 const fb = (kind, msg, sol, s) => `<div class="fb ${kind}">${s ? `<span class="sc s${s}">${s}</span>` : ''}${esc(msg)}${sol ? `<strong>${esc(sol)}</strong>` : ''}</div>`;
-
 function qmain() {
   if (!Q) return;
   if (Q.done) return nextTask();
   const inp = $('#ans'), val = inp.value;
   if (!norm(val)) { $('#qerr').textContent = 'Gib zuerst eine Antwort ein – oder tippe auf „Ich weiß es nicht“.'; inp.focus(); return; }
   $('#qerr').textContent = '';
-  const t = Q.tasks[Q.pos];
-  let r = check(val, accepted(t));
+  const t = Q.tasks[Q.pos], r = check(val, accepted(t)), near = r === 'typo' || r === 'case';
   Q.given.push(val.trim());
-  const near = r === 'typo' || r === 'case';
-  if (near && S.settings.typo === 'accept') r = 'okTypo';
-  if (r === 'ok' || r === 'okTypo') {
+  if (r === 'ok') {
     const s = Q.attempt === 0 ? 1 : 3;
-    const msg = r === 'okTypo' ? 'Als richtig gewertet. So schreibt man es:' : (s === 1 ? 'Richtig!' : 'Richtig – im zweiten Versuch.');
-    finishTask(s, fb(r === 'okTypo' ? 'warn' : 'ok', msg, r === 'okTypo' || s === 3 ? solution(t) : '', s), r === 'okTypo' ? 'warn' : 'ok');
-    if (r === 'ok' && s === 1) { const tok = Q.round + ':' + Q.pos; autoTimer = setTimeout(() => { if (Q && view === 'quiz' && Q.done && Q.round + ':' + Q.pos === tok) nextTask(); }, 850); }
+    finishTask(s, fb('ok', s === 1 ? 'Richtig!' : 'Richtig – im zweiten Versuch.', s === 3 ? solution(t) : '', s), 'ok');
+    if (s === 1) { const tok = Q.round + ':' + Q.pos; autoTimer = setTimeout(() => { if (Q && view === 'quiz' && Q.done && Q.round + ':' + Q.pos === tok) nextTask(); }, 850); }
     return;
   }
   if (Q.attempt === 0) {
@@ -344,10 +334,9 @@ function dunno() {
 function finishTask(s, html, cls) {
   const t = Q.tasks[Q.pos];
   Q.done = true;
-  Q.ses.rounds[Q.round - 1].push({i: t.i, d: t.d, p: promptOf(t), a: solution(t), g: Q.given.slice(), s});
-  save();
-  const inp = $('#ans');
-  inp.className = 'ans done ' + cls;
+  Q.ses.rounds[Q.round - 1].push({i: t.i, d: t.d, p: promptOf(t), a: solution(t), g: Q.given.slice(), s, t: now(), ms: Date.now() - Q.t0});
+  Q.ses.end = now(); save();
+  $('#ans').className = 'ans done ' + cls;
   $('#fb').innerHTML = html;
   $('#qbtn').textContent = Q.pos + 1 < Q.tasks.length ? 'Weiter' : 'Zur Auswertung';
   $('#qdk').classList.add('hidden');
@@ -358,7 +347,6 @@ function nextTask() {
   if (Q.pos >= Q.tasks.length) { view = 'round'; render(); return; }
   fillTask();
 }
-
 function vRound() {
   const res = Q.ses.rounds[Q.round - 1], sc = res.map(r => r.s);
   const errs = res.filter(r => r.s > 1).sort((a, b) => b.s - a.s);
@@ -380,23 +368,29 @@ function nextRound() {
   Q.tasks = spread(shuffle(errs)); Q.pos = 0; resetTask();
   view = 'quiz'; render();
 }
-function endRun() {
-  if (Q) { Q.ses.rounds = Q.ses.rounds.filter(r => r.length); if (!Q.ses.rounds.length) S.sessions = S.sessions.filter(s => s !== Q.ses); save(); }
-  Q = null; view = 'home'; render();
+function endRun(aborted) {
+  if (Q) {
+    if (aborted && Q.pos < Q.tasks.length && Q.ses.rounds[Q.round - 1].length) Q.ses.aborted = true;
+    Q.ses.rounds = Q.ses.rounds.filter(r => r.length);
+    if (!Q.ses.rounds.length) S.sessions = S.sessions.filter(s => s !== Q.ses);
+    else Q.ses.end = Q.ses.rounds.at(-1).at(-1).t || now();
+    save();
+  }
+  Q = null; go('home');
 }
 
 /* ---------- Statistik ---------- */
 function vStats() {
-  const p = prof();
-  const ses = S.sessions.filter(s => s.profile === p.id && s.rounds[0]?.length).slice().reverse();
+  const ses = S.sessions.filter(s => s.rounds[0]?.length).slice().reverse();
   const r1 = ses.flatMap(s => s.rounds[0].map(r => ({...r, deck: s.deck, la: s.la, lb: s.lb})));
   const byDir = {};
-  r1.forEach(r => { const k = dirLabel(r.d, {la: r.la, lb: r.lb}); (byDir[k] ||= []).push(r.s); });
+  r1.forEach(r => { const k = dirLabel(r.d, r); (byDir[k] ||= []).push(r.s); });
   const agg = {};
   r1.forEach(r => { const k = r.deck + '|' + r.d + '|' + r.p; (agg[k] ||= {p: r.p, a: r.a, d: r.d, la: r.la, lb: r.lb, s: []}).s.push(r.s); });
   const hard = Object.values(agg).map(x => ({...x, m: avg(x.s)})).filter(x => x.m > 1).sort((a, b) => b.m - a.m || b.s.length - a.s.length).slice(0, 12);
   const cls = m => m >= 5 ? 5 : m >= 3 ? 3 : 1;
-  return top() + `<h1>Statistik von ${esc(p.name)}</h1>
+  const dur = s => s.end && s.start ? fmtDur(new Date(s.end) - new Date(s.start)) : '';
+  return top() + `<h1>Statistik</h1>
   ${ses.length ? `<div class="grid">
     <div class="kpi"><small>Runs</small><b>${ses.length}</b></div>
     <div class="kpi"><small>Ø Score Runde 1</small><b>${fmt(avg(r1.map(r => r.s)))}</b></div>
@@ -405,24 +399,37 @@ function vStats() {
   <p class="mut">Score: 1 sofort richtig · 3 im zweiten Versuch · 5 zweimal falsch · 10 nicht gewusst. Weniger ist besser; gezählt wird jeweils Runde 1.</p>
   ${hard.length ? `<h2>Schwierigste Vokabeln</h2><ul class="rows">${hard.map(x => `<li><span>${esc(x.p)} → <b>${esc(x.a)}</b><br><small class="mut">${esc(dirLabel(x.d, x))} · ${x.s.length}× abgefragt</small></span><span class="sc s${cls(x.m)}">${fmt(x.m)}</span></li>`).join('')}</ul>` : ''}
   <h2>Verlauf <span class="mut" style="font-weight:400">· Ø je Runde</span></h2>
-  <ul class="rows">${ses.map(s => `<li><span>${esc(s.deckName)}<br><small class="mut">${esc(new Date(s.date).toLocaleString('de-DE', {dateStyle: 'medium', timeStyle: 'short'}))} · ${s.rounds[0].filter(r => r.s === 1).length}/${s.rounds[0].length} sofort richtig</small></span><span class="num">${s.rounds.map(r => fmt(avg(r.map(x => x.s)))).join(' · ')}</span></li>`).join('')}</ul>`
-  : `<p class="mut">Noch keine Runs mit diesem Profil. Starte unter „Lernen“ den ersten.</p>`}
-  <h2>Sichern und übertragen</h2>
-  <p class="mut">Statistik, Profile und eigene Listen liegen nur in diesem Browser. Exportiere sie, um sie zu sichern oder auf ein anderes Gerät zu holen.</p>
-  <button class="btn" data-act="export">Daten exportieren</button>
+  <ul class="rows">${ses.map(s => `<li><span>${esc(s.deckName)}${s.aborted ? '<span class="tag">abgebrochen</span>' : ''}<br><small class="mut">${esc(fmtDate(s.start))}${dur(s) ? ' · ' + dur(s) : ''} · ${s.rounds[0].filter(r => r.s === 1).length}/${s.rounds[0].length} sofort richtig</small></span><span class="num">${s.rounds.map(r => fmt(avg(r.map(x => x.s)))).join(' · ')}</span></li>`).join('')}</ul>`
+  : `<div class="empty"><p style="margin:0">Noch keine Runs. Starte unter „Lernen“ den ersten.</p></div>`}
+  <h2>Exportieren</h2>
+  <p class="mut">Alle Daten liegen nur auf diesem Gerät. Die Sicherung (JSON) enthält alle Listen und die komplette Statistik und lässt sich hier wieder importieren. Die Tabelle (CSV) enthält eine Zeile pro Aufgabe zum Auswerten in Excel.</p>
+  <div class="row2"><button class="btn" data-act="export" data-k="json">Sicherung (JSON)</button><button class="btn" data-act="export" data-k="csv" style="margin-top:0">Tabelle (CSV)</button></div>
   <div id="exp"></div>
-  <label for="imp">Daten importieren (JSON-Datei)</label>
-  <input type="file" id="imp" accept=".json,application/json">
-  <div id="impmsg" class="mut" role="status"></div>`;
+  <h2>Importieren</h2>
+  <p class="mut">Eine Sicherung zurückspielen, z. B. auf einem neuen Gerät. Vorhandene Daten bleiben erhalten, es kommt nur Neues dazu.</p>
+  <input type="file" id="imp" accept=".json,application/json" aria-label="Sicherung auswählen">
+  <div id="impmsg" class="mut" role="status" style="margin-top:8px"></div>`;
 }
-function doExport() {
-  const json = JSON.stringify({app: 'vokabeltrainer', version: 1, exported: new Date().toISOString(), ...S, decks: S.decks.filter(d => !d.repo)}, null, 1);
+const stamp = () => new Date().toISOString().slice(0, 10);
+function buildCSV() {
+  const q = v => '"' + String(v ?? '').replace(/"/g, '""') + '"';
+  const head = ['Run-Start', 'Liste', 'Richtung', 'Runde', 'Zeitpunkt', 'Abfrage', 'Lösung', 'Antwort 1', 'Antwort 2', 'Score', 'Sekunden', 'Run abgebrochen'];
+  const rows = [head.map(q).join(';')];
+  S.sessions.forEach(s => s.rounds.forEach((r, k) => r.forEach(x => rows.push([
+    fmtDate(s.start), s.deckName, dirLabel(x.d, s), k + 1, x.t ? fmtDate(x.t) : '', x.p, x.a, ...[0, 1].map(k => x.g[k] === '' ? '(weiß nicht)' : (x.g[k] ?? '')), x.s,
+    x.ms ? (x.ms / 1000).toFixed(1).replace('.', ',') : '', s.aborted ? 'ja' : 'nein'
+  ].map(q).join(';')))));
+  return '﻿' + rows.join('\r\n');
+}
+function doExport(kind) {
+  const text = kind === 'csv' ? buildCSV() : JSON.stringify({app: 'vokabeltrainer', version: 2, exported: now(), ...S}, null, 1);
+  const name = `vokabeltrainer-${stamp()}.${kind}`;
   let url = '';
-  try { url = URL.createObjectURL(new Blob([json], {type: 'application/json'})); } catch (e) {}
-  $('#exp').innerHTML = `<label for="expt">Export – als Datei laden oder kopieren</label><textarea id="expt" readonly style="min-height:120px;font-size:13px"></textarea>
-  ${url ? `<a class="btn" style="margin-top:10px" href="${url}" download="vokabeltrainer-${new Date().toISOString().slice(0, 10)}.json">Als Datei herunterladen</a>` : ''}
-  <button class="btn" data-act="copy" style="margin-top:10px">In Zwischenablage kopieren</button>`;
-  $('#expt').value = json;
+  try { url = URL.createObjectURL(new Blob([text], {type: kind === 'csv' ? 'text/csv;charset=utf-8' : 'application/json'})); } catch (e) {}
+  $('#exp').innerHTML = `${url ? `<a class="btn pri" style="margin-top:12px" href="${url}" download="${name}">${esc(name)} herunterladen</a>` : ''}
+  <button class="btn" data-act="copy" style="margin-top:10px">Stattdessen in die Zwischenablage kopieren</button>
+  <textarea id="expt" readonly class="hidden"></textarea>`;
+  $('#expt').value = text.replace(/^﻿/, '');
 }
 function doImport(file) {
   const msg = $('#impmsg');
@@ -430,126 +437,78 @@ function doImport(file) {
   rd.onload = () => {
     try {
       const d = JSON.parse(rd.result);
-      if (!Array.isArray(d.sessions) || !Array.isArray(d.profiles)) throw 0;
-      let n = 0;
-      const merge = (arr, items, test) => items.forEach(x => { if (x && x.id && test(x) && !arr.some(y => y.id === x.id)) { arr.push(x); if (arr === S.sessions) n++; } });
-      merge(S.profiles, d.profiles, x => typeof x.name === 'string');
-      merge(S.decks, d.decks || [], x => Array.isArray(x.cards) && !x.repo);
-      merge(S.sessions, d.sessions, x => Array.isArray(x.rounds));
+      if (!Array.isArray(d.sessions) || !Array.isArray(d.decks)) throw 0;
+      let nd = 0, ns = 0;
+      d.decks.forEach(x => { if (x && x.id && Array.isArray(x.cards) && !x.repo && !S.decks.some(y => y.id === x.id)) { S.decks.push({archived: false, ...x}); nd++; } });
+      d.sessions.forEach(x => { if (x && x.id && Array.isArray(x.rounds) && !S.sessions.some(y => y.id === x.id)) { S.sessions.push({start: x.date, ...x}); ns++; } });
+      S.sessions.sort((a, b) => String(a.start).localeCompare(String(b.start)));
       save();
-      msg.textContent = `Import fertig: ${n} neue Runs übernommen.`;
-      setTimeout(render, 1200);
-    } catch (e) { msg.textContent = 'Die Datei konnte nicht gelesen werden. Wähle einen Export aus dieser App.'; }
+      msg.textContent = `Import fertig: ${nd} Listen und ${ns} Runs übernommen.`;
+      setTimeout(render, 1500);
+    } catch (e) { msg.textContent = 'Die Datei konnte nicht gelesen werden. Wähle eine Sicherung (JSON) aus dieser App.'; }
   };
   rd.readAsText(file);
-}
-
-/* ---------- Profile & Einstellungen ---------- */
-function vProfiles() {
-  return top('<span></span>') + `<h1>Wer lernt?</h1>
-  ${S.profiles.map(p => `<div class="prof ${p.id === S.active ? 'on' : ''}">
-    ${renId === p.id
-      ? `<input id="ren-in" value="${esc(p.name)}" aria-label="Neuer Name" style="flex:1"><button class="chip" data-act="renSave" data-id="${esc(p.id)}">OK</button>`
-      : `<button class="name" data-act="pick" data-id="${esc(p.id)}" aria-pressed="${p.id === S.active}">${p.id === S.active ? '<b>' + esc(p.name) + '</b> <span class="mut">· aktiv</span>' : esc(p.name)}</button>
-         <button class="chip" data-act="ren" data-id="${esc(p.id)}">Umbenennen</button>
-         ${S.profiles.length > 1 ? `<button class="chip" data-act="delP" data-id="${esc(p.id)}">${confirmKey === 'p' + p.id ? 'Sicher?' : 'Löschen'}</button>` : ''}`}
-  </div>`).join('')}
-  <label for="np">Neues Profil</label>
-  <form class="row2" id="npf"><input id="np" placeholder="Name, z. B. Mia" autocomplete="off"><button class="btn" style="flex:none;width:auto">Anlegen</button></form>
-  <div class="err" id="nperr" role="alert"></div>
-  <h2 style="margin-top:34px">Einstellungen</h2>
-  <label for="typo">Wenn nur ein Buchstabe oder die Groß-/Kleinschreibung falsch ist</label>
-  <select id="typo"><option value="retry">„Fast richtig“ anzeigen und zweiter Versuch</option><option value="accept">Als richtig werten und Schreibweise zeigen</option></select>
-  <p class="mut">Satzzeichen, Artikel (der/die/das, the, to) und ae statt ä werden immer toleriert.</p>`;
 }
 
 /* ---------- Events ---------- */
 app.addEventListener('click', e => {
   if (view === 'quiz' && Q) {
-    const inp = $('#ans'), act = e.target.closest('[data-act]')?.dataset.act;
-    if (inp && act !== 'quit') inp.focus({preventScroll: true});
+    const inp = $('#ans'), a = e.target.closest('[data-act]')?.dataset.act;
+    if (inp && a !== 'quit') inp.focus({preventScroll: true});
   }
   const b = e.target.closest('[data-act]');
   if (!b) return;
   const a = b.dataset.act, id = b.dataset.id;
-  if (a !== 'delDeck' && a !== 'delP') confirmKey = null;
+  if (a !== 'del') confirmKey = null;
   switch (a) {
-    case 'tab': view = b.dataset.k; renId = null; render(); break;
+    case 'tab': go(b.dataset.k); break;
     case 'sel': selDeck = id; render(); break;
     case 'dir': dirMode = b.dataset.k; render(); break;
-    case 'new': editId = null; view = 'edit'; render(); break;
-    case 'edit': editId = id; view = 'edit'; render(); break;
-    case 'sample': $('#f-list').value = SAMPLE; if (!$('#f-name').value) $('#f-name').value = 'Beispiel Englisch'; $('#f-list').dispatchEvent(new Event('input')); break;
+    case 'new': editId = null; go('edit'); break;
+    case 'edit': editId = id; go('edit'); break;
     case 'saveDeck': {
       const cards = parseList($('#f-list').value), name = $('#f-name').value.trim();
       if (!name) { $('#f-err').textContent = 'Gib der Liste einen Namen.'; $('#f-name').focus(); return; }
       if (!cards.length) { $('#f-err').textContent = 'Keine Vokabeln erkannt. Schreib pro Zeile: Wort; Übersetzung'; $('#f-list').focus(); return; }
-      const obj = {name, la: $('#f-la').value.trim() || 'Sprache 1', lb: $('#f-lb').value.trim() || 'Sprache 2', cards};
+      const obj = {name, la: $('#f-la').value.trim() || 'Sprache 1', lb: $('#f-lb').value.trim() || 'Sprache 2', cards, updated: now()};
       const d = editId && deckById(editId);
-      if (d) Object.assign(d, obj); else { const nd = {id: uid(), ...obj}; S.decks.push(nd); selDeck = nd.id; }
-      save(); view = 'home'; render(); break;
+      if (d) Object.assign(d, obj); else { const nd = {id: uid(), ...obj, archived: false, created: now()}; S.decks.push(nd); selDeck = nd.id; }
+      save(); go('lists'); break;
     }
-    case 'delDeck':
-      if (confirmKey === 'd' + editId) { S.decks = S.decks.filter(d => d.id !== editId); confirmKey = null; save(); view = 'home'; render(); }
-      else { confirmKey = 'd' + editId; render(); }
-      break;
+    case 'archive': { const d = deckById(id); if (d) { d.archived = true; d.archivedAt = now(); save(); } render(); break; }
+    case 'restore': { const d = deckById(id); if (d) { d.archived = false; delete d.archivedAt; d.updated = now(); save(); } render(); break; }
+    case 'del':
+      if (confirmKey === 'd' + id) { S.decks = S.decks.filter(d => d.id !== id); confirmKey = null; save(); }
+      else confirmKey = 'd' + id;
+      render(); break;
     case 'start': startRun(); break;
     case 'qmain': qmain(); break;
     case 'dunno': dunno(); break;
-    case 'quit': endRun(); break;
+    case 'quit': endRun(true); break;
     case 'nextRound': nextRound(); break;
-    case 'endRun': endRun(); break;
-    case 'export': doExport(); break;
+    case 'endRun': endRun(false); break;
+    case 'export': doExport(b.dataset.k); break;
     case 'copy': {
       const ta = $('#expt');
-      Promise.resolve().then(() => navigator.clipboard.writeText(ta.value)).then(() => { b.textContent = 'Kopiert'; }, () => { ta.focus(); ta.select(); b.textContent = 'Text markiert – jetzt kopieren'; });
+      Promise.resolve().then(() => navigator.clipboard.writeText(ta.value)).then(() => { b.textContent = 'Kopiert'; }, () => {
+        ta.classList.remove('hidden'); ta.style.minHeight = '120px'; ta.style.fontSize = '13px'; ta.style.marginTop = '10px'; ta.focus(); ta.select(); b.textContent = 'Text markiert – jetzt kopieren';
+      });
       break;
     }
-    case 'pick': S.active = id; save(); render(); break;
-    case 'ren': { renId = id; render(); const ri = $('#ren-in'); ri.focus(); ri.select(); break; }
-    case 'renSave': { const v = $('#ren-in').value.trim(); const p = S.profiles.find(x => x.id === id); if (v && p) p.name = v; renId = null; save(); render(); break; }
-    case 'delP':
-      if (confirmKey === 'p' + id) {
-        S.profiles = S.profiles.filter(p => p.id !== id); S.sessions = S.sessions.filter(s => s.profile !== id);
-        if (S.active === id) S.active = S.profiles[0].id;
-        confirmKey = null; save(); render();
-      } else { confirmKey = 'p' + id; render(); }
-      break;
   }
 });
-app.addEventListener('submit', e => {
-  e.preventDefault();
-  if (e.target.id === 'qf') qmain();
-  if (e.target.id === 'npf') {
-    const v = $('#np').value.trim();
-    if (!v) { $('#nperr').textContent = 'Gib einen Namen ein.'; $('#np').focus(); return; }
-    const p = {id: uid(), name: v}; S.profiles.push(p); S.active = p.id; save(); render();
-  }
-});
-app.addEventListener('change', e => {
-  if (e.target.id === 'typo') { S.settings.typo = e.target.value; save(); }
-  if (e.target.id === 'imp' && e.target.files[0]) doImport(e.target.files[0]);
-});
-app.addEventListener('mousedown', e => {
-  if (view === 'quiz' && e.target.closest('#qbtn,#qdk')) e.preventDefault();
-});
+app.addEventListener('submit', e => { e.preventDefault(); if (e.target.id === 'qf') qmain(); });
+app.addEventListener('change', e => { if (e.target.id === 'imp' && e.target.files[0]) doImport(e.target.files[0]); });
+app.addEventListener('mousedown', e => { if (view === 'quiz' && e.target.closest('#qbtn,#qdk')) e.preventDefault(); });
 app.addEventListener('beforeinput', e => {
   if (view === 'quiz' && Q && Q.done && e.target.id === 'ans' && !/LineBreak|Paragraph/.test(e.inputType)) e.preventDefault();
-});
-app.addEventListener('keydown', e => {
-  if (e.key === 'Enter' && e.target.id === 'ren-in') { e.preventDefault(); app.querySelector('[data-act=renSave]').click(); }
 });
 document.addEventListener('keydown', e => {
   if (view === 'quiz' && Q && Q.done && e.key === 'Enter' && e.target.id !== 'ans') { e.preventDefault(); nextTask(); }
 });
 
-/* ---------- Start ---------- */
-(async () => {
-  await loadRepoDecks();
-  if (!S.decks.length) S.decks.push({id: uid(), name: 'Beispiel Englisch', la: 'Deutsch', lb: 'Englisch', cards: parseList(SAMPLE)});
-  save(); render();
-  try { if ('serviceWorker' in navigator && window.top === window && location.protocol === 'https:') navigator.serviceWorker.register('sw.js').catch(() => {}); } catch (e) {}
-})();
+save(); render();
+try { if ('serviceWorker' in navigator && window.top === window && location.protocol === 'https:') navigator.serviceWorker.register('sw.js').catch(() => {}); } catch (e) {}
 }
 </script>
 </body>
