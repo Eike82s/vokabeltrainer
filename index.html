@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Vokabeltrainer</title>
+<meta name="theme-color" content="#2546d8">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* VOICE: ruhig, freundlich, konzentriert – nichts lenkt vom Wort ab
+   IDEA: ein Abfrageblatt aus dem Karteikasten: eine Frage, ein Feld
+   PICTURE: das große Abfragewort selbst ist das Bild
+   COLOUR and TYPE: Weiß und Tinte, Ultramarin als Akzent; Atkinson Hyperlegible
+   LAYOUT: eine Spalte bis 520px, Tab-Leiste unten, Daumen-Buttons */
+:root{color-scheme:light dark;--bg:light-dark(#ffffff,#121316);--card:light-dark(#f4f4f7,#1c1d22);--ink:light-dark(#17181c,#ececef);--mut:light-dark(#5d6069,#a0a3ac);--line:light-dark(#e2e2e8,#2c2e35);--acc:light-dark(#2546d8,#93a5ff);--accbg:light-dark(#e9edfd,#1f2647);--ok:light-dark(#17703f,#72d89c);--okbg:light-dark(#e5f5eb,#15301f);--bad:light-dark(#b3261e,#ff9383);--badbg:light-dark(#fdecea,#3a1b18);--warn:light-dark(#8f5100,#f3b660);--warnbg:light-dark(#fdf2e2,#33250f)}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+html,body{min-height:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.5 "Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",sans-serif;overflow-x:clip;-webkit-tap-highlight-color:transparent}
+#app{max-width:520px;margin:0 auto;min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;padding:calc(env(safe-area-inset-top) + 14px) 18px calc(env(safe-area-inset-bottom) + 24px)}
+#app.tabbed{padding-bottom:calc(env(safe-area-inset-bottom) + 92px)}
+h1{font-size:30px;line-height:1.08;margin:6px 0 18px;text-wrap:balance}
+h2{font-size:18px;margin:26px 0 8px}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;min-height:44px;margin-bottom:6px}
+.chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:999px;padding:6px 14px;background:var(--bg);font-size:15px;min-height:40px}
+.chip svg{width:18px;height:18px}
+.btn{display:flex;align-items:center;justify-content:center;width:100%;min-height:52px;border-radius:14px;border:1px solid var(--line);background:var(--bg);font-weight:700;font-size:17px;padding:12px 16px;text-decoration:none;color:inherit}
+.btn.pri{background:var(--acc);color:light-dark(#fff,#0d1130);border-color:var(--acc)}
+.btn.lnk{border:0;background:none;color:var(--acc);font-weight:400;min-height:44px;width:auto;padding:8px 0}
+.btn+.btn{margin-top:10px}
+:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.deck{display:block;width:100%;text-align:left;border:1px solid var(--line);border-radius:14px;padding:14px 16px;background:var(--bg);margin-bottom:10px}
+.deck.on{border:2px solid var(--acc);padding:13px 15px}
+.deck b{display:block;font-size:17px}
+.deck small,.mut{color:var(--mut);font-size:14px}
+.seg{display:flex;gap:4px;background:var(--card);padding:4px;border-radius:12px;margin:6px 0 22px}
+.seg button{flex:1;border:0;background:none;border-radius:9px;min-height:44px;font-size:15px;white-space:nowrap}
+.seg button.on{background:var(--bg);font-weight:700;box-shadow:0 0 0 1px var(--line)}
+label{display:block;font-size:14px;color:var(--mut);margin:16px 0 6px}
+input,textarea,select{width:100%;font-size:17px;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+input[type=file]{font-size:15px;padding:10px}
+textarea{min-height:220px;font-size:16px;line-height:1.5;resize:vertical}
+.bar{height:6px;background:var(--card);border-radius:3px;overflow:hidden;margin-top:6px}
+.bar i{display:block;height:100%;background:var(--acc);transition:width .3s ease}
+.q-dir{margin-top:clamp(24px,7vh,56px);font-size:14px;color:var(--mut);text-align:center;letter-spacing:.02em}
+.q-word{font-size:clamp(30px,9vw,44px);line-height:1.12;font-weight:700;text-align:center;margin:10px 0 clamp(22px,5vh,40px);overflow-wrap:anywhere;text-wrap:balance}
+.ans{font-size:21px;padding:14px 16px;text-align:center;border-width:2px}
+.ans:focus-visible{outline:none;border-color:var(--acc)}.ans.ok{border-color:var(--ok)}.ans.bad{border-color:var(--bad)}.ans.warn{border-color:var(--warn)}
+.fb{border-radius:12px;padding:12px 14px;margin-top:12px;font-size:16px;animation:pop .2s ease}
+.fb.ok{background:var(--okbg);color:var(--ok)}.fb.bad{background:var(--badbg);color:var(--bad)}.fb.warn{background:var(--warnbg);color:var(--warn)}
+.fb strong{display:block;font-size:22px;color:var(--ink);margin-top:2px;overflow-wrap:anywhere}
+@keyframes pop{from{transform:translateY(4px);opacity:0}to{transform:none;opacity:1}}
+.err{color:var(--bad);font-size:14px;margin-top:6px;min-height:0}
+.grow{flex:1;min-height:20px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.kpi{background:var(--card);border-radius:12px;padding:12px 14px}
+.kpi small{display:block;color:var(--mut);font-size:13px}.kpi b{font-size:26px}
+.rows{list-style:none;padding:0;margin:0}
+.rows li{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:11px 0;border-bottom:1px solid var(--line);font-size:16px}
+.rows li>span:first-child{overflow-wrap:anywhere}
+.rows .num{flex:none;white-space:nowrap;text-align:right;font-variant-numeric:tabular-nums}
+.sc{flex:none;min-width:36px;text-align:center;border-radius:8px;padding:2px 8px;font-weight:700;font-size:14px;font-variant-numeric:tabular-nums}
+.s1{background:var(--okbg);color:var(--ok)}.s3{background:var(--warnbg);color:var(--warn)}.s5,.s10{background:var(--badbg);color:var(--bad)}
+.fb .sc{float:right;margin-left:8px}
+.tabs{position:fixed;left:0;right:0;bottom:0;background:var(--bg);border-top:1px solid var(--line);display:flex;justify-content:center;padding-bottom:env(safe-area-inset-bottom);z-index:5}
+.tabs button{flex:1;max-width:174px;border:0;background:none;min-height:62px;font-size:13px;color:var(--mut);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px}
+.tabs button.on{color:var(--acc);font-weight:700}
+.tabs svg{width:24px;height:24px}
+.row2{display:flex;gap:10px;align-items:flex-end}.row2>*{flex:1}
+.pill{font-size:12px;background:var(--accbg);color:var(--acc);border-radius:6px;padding:1px 7px;margin-left:8px;vertical-align:2px;font-weight:400}
+.prof{display:flex;gap:8px;align-items:center;border:1px solid var(--line);border-radius:14px;padding:8px 8px 8px 14px;margin-bottom:10px}
+.prof.on{border:2px solid var(--acc);padding:7px 7px 7px 13px}
+.prof .name{flex:1;text-align:left;border:0;background:none;font-size:17px;min-height:44px;padding:0}
+.hidden{display:none!important}
+@media (prefers-reduced-motion:reduce){.bar i{transition:none}.fb{animation:none}}
+</style>
+</head>
+<body>
+<main id="app"><p class="mut">Lädt …</p></main>
+<script>
+{
+const KEY = 'vokabeltrainer.v1';
+const app = document.getElementById('app');
+const $ = s => document.querySelector(s);
+const uid = () => Math.random().toString(36).slice(2, 10);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const avg = a => a.length ? a.reduce((x, y) => x + y, 0) / a.length : 0;
+const fmt = n => n.toLocaleString('de-DE', {minimumFractionDigits: 1, maximumFractionDigits: 1});
+const SAMPLE = `Schmetterling; butterfly
+Gewohnheit; habit
+widerwillig; reluctant
+zuverlässig; reliable
+(sich) erinnern; to remember
+das Gebäude; building
+überraschen; to surprise
+der Nachbar; neighbour/neighbor
+ungefähr; about/approximately
+gelingen; to succeed`;
+
+const ICONS = {
+  learn: '<path d="M4 5h11a3 3 0 0 1 3 3v11H7a3 3 0 0 1-3-3z"/><path d="M8 9h6M8 13h4"/>',
+  stats: '<path d="M5 19V11M12 19V5M19 19v-6"/>',
+  user: '<circle cx="12" cy="8" r="3.5"/><path d="M5 20a7 7 0 0 1 14 0"/>'
+};
+const icon = k => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[k]}</svg>`;
+
+/* ---------- Daten ---------- */
+function parseList(text) {
+  return String(text).split(/\r?\n/).map(l => l.trim()).filter(l => l && !l.startsWith('#')).map(l => {
+    const m = l.match(/^(.*?)\s*(?:\t|;|\s=\s|\s-\s)\s*(.*)$/);
+    return m && m[1].trim() && m[2].trim() ? {a: m[1].trim(), b: m[2].trim()} : null;
+  }).filter(Boolean);
+}
+function fresh() {
+  const p = {id: uid(), name: 'Ich'};
+  return {profiles: [p], active: p.id, decks: [], sessions: [], settings: {typo: 'retry'}};
+}
+let S = null;
+try { S = JSON.parse(localStorage.getItem(KEY)); } catch (e) {}
+if (!S || !Array.isArray(S.profiles) || !S.profiles.length) S = fresh();
+S.decks ||= []; S.sessions ||= []; S.settings ||= {typo: 'retry'};
+function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
+
+async function loadRepoDecks() {
+  try {
+    const r = await fetch('decks/index.json', {cache: 'no-cache'});
+    if (!r.ok) return;
+    const list = await r.json();
+    for (const e of Array.isArray(list) ? list : []) {
+      try {
+        const res = await fetch('decks/' + encodeURI(String(e.file)), {cache: 'no-cache'});
+        if (!res.ok) continue;
+        const cards = parseList(await res.text());
+        const id = 'repo:' + e.file;
+        const obj = {id, repo: true, name: String(e.name || e.file), la: String(e.la || 'Deutsch'), lb: String(e.lb || 'Englisch'), cards};
+        const ex = S.decks.find(d => d.id === id);
+        ex ? Object.assign(ex, obj) : S.decks.push(obj);
+      } catch (x) {}
+    }
+  } catch (e) {}
+}
+
+const prof = () => S.profiles.find(p => p.id === S.active) || S.profiles[0];
+const deckById = id => S.decks.find(d => d.id === id);
+const ABBR = {deutsch:'DE', englisch:'EN', französisch:'FR', franzoesisch:'FR', spanisch:'ES', latein:'LA', italienisch:'IT', niederländisch:'NL', russisch:'RU'};
+const ab = n => ABBR[String(n || '').toLowerCase()] || String(n || '?').slice(0, 2).toUpperCase();
+const dirLabel = (d, deck) => d === 'ab' ? ab(deck.la) + ' → ' + ab(deck.lb) : ab(deck.lb) + ' → ' + ab(deck.la);
+
+/* ---------- Antwortprüfung ---------- */
+const ART = /^(der|die|das|den|dem|des|ein|eine|einen|einem|einer|the|a|an|to)\s+/;
+function norm(s) {
+  s = String(s).toLowerCase().normalize('NFC')
+    .replace(/ä/g, 'ae').replace(/ö/g, 'oe').replace(/ü/g, 'ue').replace(/ß/g, 'ss')
+    .replace(/\([^)]*\)/g, ' ')
+    .replace(/[.,!?;:"'„“”‚‘’`´()\[\]]/g, ' ')
+    .replace(/\s+/g, ' ').trim();
+  let prev;
+  do { prev = s; s = s.replace(ART, ''); } while (s !== prev);
+  return s;
+}
+const variants = s => String(s).split('/').map(norm).filter(Boolean);
+function dist(a, b) {
+  const m = a.length, n = b.length, d = [];
+  for (let i = 0; i <= m; i++) { d[i] = [i]; }
+  for (let j = 0; j <= n; j++) d[0][j] = j;
+  for (let i = 1; i <= m; i++) for (let j = 1; j <= n; j++) {
+    const c = a[i - 1] === b[j - 1] ? 0 : 1;
+    d[i][j] = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + c);
+    if (i > 1 && j > 1 && a[i - 1] === b[j - 2] && a[i - 2] === b[j - 1]) d[i][j] = Math.min(d[i][j], d[i - 2][j - 2] + 1);
+  }
+  return d[m][n];
+}
+function check(input, accepted) {
+  const n = norm(input);
+  if (accepted.includes(n)) return 'ok';
+  if (accepted.some(v => v.length >= 4 && Math.abs(v.length - n.length) <= 1 && dist(v, n) <= 1)) return 'typo';
+  return 'wrong';
+}
+
+/* ---------- Ansicht & Zustand ---------- */
+let view = 'home', Q = null, selDeck = null, dirMode = 'both', editId = null, confirmKey = null, renId = null, autoTimer = null;
+
+function render() {
+  clearTimeout(autoTimer);
+  const tabbed = ['home', 'stats', 'profiles'].includes(view);
+  const html = {home: vHome, edit: vEdit, quiz: vQuiz, round: vRound, stats: vStats, profiles: vProfiles}[view]();
+  app.className = tabbed ? 'tabbed' : '';
+  app.innerHTML = html + (tabbed ? tabs() : '');
+  if (view === 'quiz') fillTask();
+  if (view === 'edit') bindEdit();
+  if (view === 'profiles') { const t = $('#typo'); t.value = S.settings.typo; }
+  window.scrollTo(0, 0);
+}
+function tabs() {
+  const t = [['home', 'Lernen', 'learn'], ['stats', 'Statistik', 'stats'], ['profiles', 'Profile', 'user']];
+  return `<nav class="tabs" aria-label="Navigation">${t.map(([k, l, i]) => `<button data-act="tab" data-k="${k}" class="${view === k ? 'on' : ''}" ${view === k ? 'aria-current="page"' : ''}>${icon(i)}${l}</button>`).join('')}</nav>`;
+}
+function top(right = '') {
+  return `<div class="top"><span class="mut">Vokabeltrainer</span>${right || `<button class="chip" data-act="tab" data-k="profiles" aria-label="Profil wechseln">${icon('user')} ${esc(prof().name)}</button>`}</div>`;
+}
+
+function vHome() {
+  const p = prof();
+  if (!deckById(selDeck)) selDeck = S.decks[0]?.id;
+  const d = deckById(selDeck);
+  const decks = S.decks.map(x => {
+    const last = S.sessions.filter(s => s.profile === p.id && s.deck === x.id && s.rounds[0]?.length).slice(-1)[0];
+    const info = x.cards.length + ' Vokabeln' + (last ? ' · zuletzt Ø ' + fmt(avg(last.rounds[0].map(r => r.s))) : ' · neu');
+    return `<button class="deck ${x.id === selDeck ? 'on' : ''}" data-act="sel" data-id="${esc(x.id)}" aria-pressed="${x.id === selDeck}"><b>${esc(x.name)}${x.repo ? '<span class="pill">aus dem Repo</span>' : ''}</b><small>${esc(x.la)} – ${esc(x.lb)} · ${info}</small></button>`;
+  }).join('');
+  const n = d ? d.cards.length * (dirMode === 'both' ? 2 : 1) : 0;
+  return top() + `<h1>Was lernen wir heute, ${esc(p.name)}?</h1>
+  ${decks || '<p class="mut">Noch keine Vokabelliste. Leg die erste an.</p>'}
+  <div><button class="btn lnk" data-act="new">+ Neue Liste einfügen</button></div>
+  ${d ? `<label>Abfragerichtung</label>
+  <div class="seg" role="group">${[['both', 'Beide'], ['ab', dirLabel('ab', d)], ['ba', dirLabel('ba', d)]].map(([k, t]) => `<button data-act="dir" data-k="${k}" class="${dirMode === k ? 'on' : ''}" aria-pressed="${dirMode === k}">${esc(t)}</button>`).join('')}</div>
+  <div class="grow"></div>
+  <button class="btn pri" data-act="start" ${n ? '' : 'aria-disabled="true"'}>Run starten · ${n} Aufgaben</button>
+  ${d.repo ? '<p class="mut" style="text-align:center">Diese Liste kommt aus deinem Git-Repo und wird dort bearbeitet.</p>' : `<button class="btn" data-act="edit" data-id="${esc(d.id)}">Liste bearbeiten</button>`}` : ''}`;
+}
+
+function vEdit() {
+  const d = editId ? deckById(editId) : null;
+  const text = d ? d.cards.map(c => c.a + '; ' + c.b).join('\n') : '';
+  return `<div class="top"><button class="chip" data-act="tab" data-k="home">← Zurück</button></div>
+  <h1>${d ? 'Liste bearbeiten' : 'Neue Liste'}</h1>
+  <label for="f-name">Name</label><input id="f-name" value="${esc(d?.name || '')}" placeholder="Englisch Unit 3">
+  <div class="row2"><div><label for="f-la">Sprache 1</label><input id="f-la" value="${esc(d?.la || 'Deutsch')}"></div><div><label for="f-lb">Sprache 2</label><input id="f-lb" value="${esc(d?.lb || 'Englisch')}"></div></div>
+  <label for="f-list">Vokabeln – eine pro Zeile, getrennt durch ; oder Tab</label>
+  <textarea id="f-list" placeholder="Schmetterling; butterfly&#10;Gewohnheit; habit" autocapitalize="off" autocorrect="off" spellcheck="false">${esc(text)}</textarea>
+  <p class="mut" id="f-info"></p>
+  <p class="mut">Mehrere richtige Antworten mit / trennen: <i>ungefähr; about/approximately</i>. Teile in Klammern sind optional: <i>(sich) erinnern</i>. Artikel wie der/die/das, the und to muss man nicht mittippen.</p>
+  <div class="err" id="f-err" role="alert"></div>
+  <div class="grow"></div>
+  <button class="btn pri" data-act="saveDeck">Speichern</button>
+  ${!d ? `<button class="btn" data-act="sample">Beispielliste einfügen</button>` : `<button class="btn" data-act="delDeck">${confirmKey === 'd' + d.id ? 'Wirklich löschen? Nochmal tippen' : 'Liste löschen'}</button>`}`;
+}
+function bindEdit() {
+  const ta = $('#f-list'), info = $('#f-info');
+  const upd = () => { const n = parseList(ta.value).length; info.textContent = n ? n + ' Vokabeln erkannt · ' + n * 2 + ' Aufgaben pro Run' : ''; $('#f-err').textContent = ''; };
+  ta.addEventListener('input', upd); upd();
+}
+
+/* ---------- Abfrage ---------- */
+function shuffle(a) { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+function spread(t) {
+  for (let k = 1; k < t.length; k++) if (t[k].i === t[k - 1].i)
+    for (let m = k + 1; m < t.length; m++) if (t[m].i !== t[k - 1].i) { [t[k], t[m]] = [t[m], t[k]]; break; }
+  return t;
+}
+function startRun() {
+  const d = deckById(selDeck);
+  if (!d || !d.cards.length) return;
+  const dirs = dirMode === 'both' ? ['ab', 'ba'] : [dirMode];
+  const tasks = [];
+  d.cards.forEach((c, i) => dirs.forEach(x => tasks.push({i, d: x})));
+  const ses = {id: uid(), profile: S.active, deck: d.id, deckName: d.name, la: d.la, lb: d.lb, date: new Date().toISOString(), rounds: [[]]};
+  S.sessions.push(ses); save();
+  Q = {deck: d, ses, round: 1, tasks: spread(shuffle(tasks)), pos: 0};
+  resetTask(); view = 'quiz'; render();
+}
+function resetTask() { Q.attempt = 0; Q.given = []; Q.done = false; }
+const card = t => Q.deck.cards[t.i];
+const promptOf = t => t.d === 'ab' ? card(t).a : card(t).b;
+const solution = t => t.d === 'ab' ? card(t).b : card(t).a;
+function accepted(t) {
+  const from = t.d === 'ab' ? 'a' : 'b', to = t.d === 'ab' ? 'b' : 'a', key = norm(card(t)[from]);
+  const set = new Set();
+  Q.deck.cards.forEach(x => { if (norm(x[from]) === key) variants(x[to]).forEach(v => set.add(v)); });
+  return [...set];
+}
+
+function vQuiz() {
+  return `<div class="top"><button class="chip" data-act="quit">✕ Beenden</button><span class="mut" id="q-count"></span></div>
+  <div class="bar"><i id="q-bar" style="width:0"></i></div>
+  <div class="q-dir" id="q-dir"></div>
+  <div class="q-word" id="q-word"></div>
+  <form id="qf" autocomplete="off" novalidate><input id="ans" class="ans" aria-label="Deine Antwort" placeholder="Antwort eingeben" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" enterkeyhint="go"></form>
+  <div class="err" id="qerr" role="alert"></div>
+  <div id="fb" aria-live="polite"></div>
+  <div class="grow"></div>
+  <button class="btn pri" id="qbtn" data-act="qmain">Prüfen</button>
+  <button class="btn" id="qdk" data-act="dunno">Ich weiß es nicht</button>`;
+}
+function fillTask() {
+  const t = Q.tasks[Q.pos];
+  $('#q-count').textContent = `Runde ${Q.round} · ${Q.pos + 1} von ${Q.tasks.length}`;
+  $('#q-bar').style.width = Math.round(Q.pos / Q.tasks.length * 100) + '%';
+  $('#q-dir').textContent = dirLabel(t.d, Q.deck) + ' · übersetze';
+  $('#q-word').textContent = promptOf(t);
+  const inp = $('#ans');
+  inp.value = ''; inp.readOnly = false; inp.className = 'ans';
+  $('#fb').innerHTML = ''; $('#qerr').textContent = '';
+  $('#qbtn').textContent = 'Prüfen';
+  $('#qdk').classList.remove('hidden');
+  inp.focus({preventScroll: true});
+}
+const fb = (kind, msg, sol, s) => `<div class="fb ${kind}">${s ? `<span class="sc s${s}">${s}</span>` : ''}${esc(msg)}${sol ? `<strong>${esc(sol)}</strong>` : ''}</div>`;
+
+function qmain() {
+  if (!Q) return;
+  if (Q.done) return nextTask();
+  const inp = $('#ans'), val = inp.value;
+  if (!norm(val)) { $('#qerr').textContent = 'Gib zuerst eine Antwort ein – oder tippe auf „Ich weiß es nicht“.'; inp.focus(); return; }
+  $('#qerr').textContent = '';
+  const t = Q.tasks[Q.pos];
+  let r = check(val, accepted(t));
+  Q.given.push(val.trim());
+  if (r === 'typo' && S.settings.typo === 'accept') r = 'okTypo';
+  if (r === 'ok' || r === 'okTypo') {
+    const s = Q.attempt === 0 ? 1 : 3;
+    const msg = r === 'okTypo' ? 'Als richtig gewertet. So schreibt man es:' : (s === 1 ? 'Richtig!' : 'Richtig – im zweiten Versuch.');
+    finishTask(s, fb(r === 'okTypo' ? 'warn' : 'ok', msg, r === 'okTypo' || s === 3 ? solution(t) : '', s), r === 'okTypo' ? 'warn' : 'ok');
+    if (r === 'ok' && s === 1) { const tok = Q.round + ':' + Q.pos; autoTimer = setTimeout(() => { if (Q && view === 'quiz' && Q.done && Q.round + ':' + Q.pos === tok) nextTask(); }, 850); }
+    return;
+  }
+  if (Q.attempt === 0) {
+    Q.attempt = 1;
+    $('#fb').innerHTML = fb(r === 'typo' ? 'warn' : 'bad', r === 'typo' ? 'Fast! Da steckt ein Tippfehler drin. Noch ein Versuch.' : 'Nicht ganz. Du hast noch einen Versuch.');
+    inp.className = 'ans ' + (r === 'typo' ? 'warn' : 'bad');
+    inp.select();
+    return;
+  }
+  finishTask(5, fb('bad', 'Leider wieder falsch. Richtig ist:', solution(t), 5), 'bad');
+}
+function dunno() {
+  if (!Q || Q.done) return;
+  Q.given.push('');
+  finishTask(10, fb('bad', 'Kein Problem – die Lösung ist:', solution(Q.tasks[Q.pos]), 10), 'bad');
+}
+function finishTask(s, html, cls) {
+  const t = Q.tasks[Q.pos];
+  Q.done = true;
+  Q.ses.rounds[Q.round - 1].push({i: t.i, d: t.d, p: promptOf(t), a: solution(t), g: Q.given.slice(), s});
+  save();
+  const inp = $('#ans');
+  inp.readOnly = true; inp.className = 'ans ' + cls;
+  $('#fb').innerHTML = html;
+  $('#qbtn').textContent = Q.pos + 1 < Q.tasks.length ? 'Weiter' : 'Zur Auswertung';
+  $('#qdk').classList.add('hidden');
+  inp.focus({preventScroll: true});
+}
+function nextTask() {
+  clearTimeout(autoTimer);
+  Q.pos++; resetTask();
+  if (Q.pos >= Q.tasks.length) { view = 'round'; render(); return; }
+  fillTask();
+}
+
+function vRound() {
+  const res = Q.ses.rounds[Q.round - 1], sc = res.map(r => r.s);
+  const errs = res.filter(r => r.s > 1).sort((a, b) => b.s - a.s);
+  const canNext = errs.length > 0 && Q.round < 3;
+  const title = !errs.length ? 'Alles sofort richtig!' : canNext ? 'Gut gemacht. Jetzt die Fehler.' : 'Fertig für heute.';
+  return `<div class="top"><span class="mut">${esc(Q.deck.name)}</span><span class="mut">Runde ${Q.round} geschafft</span></div>
+  <h1>${title}</h1>
+  <div class="grid"><div class="kpi"><small>Ø Score</small><b>${fmt(avg(sc))}</b></div><div class="kpi"><small>Sofort richtig</small><b>${sc.filter(x => x === 1).length}/${sc.length}</b></div></div>
+  ${Q.round > 1 ? `<h2>Alle Runden</h2><ul class="rows">${Q.ses.rounds.map((r, k) => `<li><span>Runde ${k + 1} · ${r.filter(x => x.s === 1).length} von ${r.length} sofort richtig</span><span class="num">Ø ${fmt(avg(r.map(x => x.s)))}</span></li>`).join('')}</ul>` : ''}
+  ${errs.length ? `<h2>${canNext ? 'Kommt in Runde ' + (Q.round + 1) : 'Diese noch üben'}</h2><ul class="rows">${errs.map(r => `<li><span>${esc(r.p)} → <b>${esc(r.a)}</b><br><small class="mut">${esc(dirLabel(r.d, Q.deck))}${r.g.filter(Boolean).length ? ' · deine Antwort: ' + esc(r.g.filter(Boolean).join(', ')) : ''}</small></span><span class="sc s${r.s}">${r.s}</span></li>`).join('')}</ul>` : ''}
+  <p class="mut">Score: 1 sofort richtig · 3 im zweiten Versuch · 5 zweimal falsch · 10 nicht gewusst</p>
+  <div class="grow"></div>
+  ${canNext ? `<button class="btn pri" data-act="nextRound">Runde ${Q.round + 1} starten · ${errs.length} Aufgaben</button>` : ''}
+  <button class="btn ${canNext ? '' : 'pri'}" data-act="endRun">${canNext ? 'Für heute beenden' : 'Zur Übersicht'}</button>`;
+}
+function nextRound() {
+  const errs = Q.ses.rounds[Q.round - 1].filter(r => r.s > 1).map(r => ({i: r.i, d: r.d}));
+  Q.round++; Q.ses.rounds.push([]); save();
+  Q.tasks = spread(shuffle(errs)); Q.pos = 0; resetTask();
+  view = 'quiz'; render();
+}
+function endRun() {
+  if (Q) { Q.ses.rounds = Q.ses.rounds.filter(r => r.length); if (!Q.ses.rounds.length) S.sessions = S.sessions.filter(s => s !== Q.ses); save(); }
+  Q = null; view = 'home'; render();
+}
+
+/* ---------- Statistik ---------- */
+function vStats() {
+  const p = prof();
+  const ses = S.sessions.filter(s => s.profile === p.id && s.rounds[0]?.length).slice().reverse();
+  const r1 = ses.flatMap(s => s.rounds[0].map(r => ({...r, deck: s.deck, la: s.la, lb: s.lb})));
+  const byDir = {};
+  r1.forEach(r => { const k = dirLabel(r.d, {la: r.la, lb: r.lb}); (byDir[k] ||= []).push(r.s); });
+  const agg = {};
+  r1.forEach(r => { const k = r.deck + '|' + r.d + '|' + r.p; (agg[k] ||= {p: r.p, a: r.a, d: r.d, la: r.la, lb: r.lb, s: []}).s.push(r.s); });
+  const hard = Object.values(agg).map(x => ({...x, m: avg(x.s)})).filter(x => x.m > 1).sort((a, b) => b.m - a.m || b.s.length - a.s.length).slice(0, 12);
+  const cls = m => m >= 5 ? 5 : m >= 3 ? 3 : 1;
+  return top() + `<h1>Statistik von ${esc(p.name)}</h1>
+  ${ses.length ? `<div class="grid">
+    <div class="kpi"><small>Runs</small><b>${ses.length}</b></div>
+    <div class="kpi"><small>Ø Score Runde 1</small><b>${fmt(avg(r1.map(r => r.s)))}</b></div>
+    ${Object.entries(byDir).map(([k, v]) => `<div class="kpi"><small>Ø ${esc(k)}</small><b>${fmt(avg(v))}</b></div>`).join('')}
+  </div>
+  <p class="mut">Score: 1 sofort richtig · 3 im zweiten Versuch · 5 zweimal falsch · 10 nicht gewusst. Weniger ist besser; gezählt wird jeweils Runde 1.</p>
+  ${hard.length ? `<h2>Schwierigste Vokabeln</h2><ul class="rows">${hard.map(x => `<li><span>${esc(x.p)} → <b>${esc(x.a)}</b><br><small class="mut">${esc(dirLabel(x.d, x))} · ${x.s.length}× abgefragt</small></span><span class="sc s${cls(x.m)}">${fmt(x.m)}</span></li>`).join('')}</ul>` : ''}
+  <h2>Verlauf <span class="mut" style="font-weight:400">· Ø je Runde</span></h2>
+  <ul class="rows">${ses.map(s => `<li><span>${esc(s.deckName)}<br><small class="mut">${esc(new Date(s.date).toLocaleString('de-DE', {dateStyle: 'medium', timeStyle: 'short'}))} · ${s.rounds[0].filter(r => r.s === 1).length}/${s.rounds[0].length} sofort richtig</small></span><span class="num">${s.rounds.map(r => fmt(avg(r.map(x => x.s)))).join(' · ')}</span></li>`).join('')}</ul>`
+  : `<p class="mut">Noch keine Runs mit diesem Profil. Starte unter „Lernen“ den ersten.</p>`}
+  <h2>Sichern und übertragen</h2>
+  <p class="mut">Statistik, Profile und eigene Listen liegen nur in diesem Browser. Exportiere sie, um sie zu sichern oder auf ein anderes Gerät zu holen.</p>
+  <button class="btn" data-act="export">Daten exportieren</button>
+  <div id="exp"></div>
+  <label for="imp">Daten importieren (JSON-Datei)</label>
+  <input type="file" id="imp" accept=".json,application/json">
+  <div id="impmsg" class="mut" role="status"></div>`;
+}
+function doExport() {
+  const json = JSON.stringify({app: 'vokabeltrainer', version: 1, exported: new Date().toISOString(), ...S, decks: S.decks.filter(d => !d.repo)}, null, 1);
+  let url = '';
+  try { url = URL.createObjectURL(new Blob([json], {type: 'application/json'})); } catch (e) {}
+  $('#exp').innerHTML = `<label for="expt">Export – als Datei laden oder kopieren</label><textarea id="expt" readonly style="min-height:120px;font-size:13px"></textarea>
+  ${url ? `<a class="btn" style="margin-top:10px" href="${url}" download="vokabeltrainer-${new Date().toISOString().slice(0, 10)}.json">Als Datei herunterladen</a>` : ''}
+  <button class="btn" data-act="copy" style="margin-top:10px">In Zwischenablage kopieren</button>`;
+  $('#expt').value = json;
+}
+function doImport(file) {
+  const msg = $('#impmsg');
+  const rd = new FileReader();
+  rd.onload = () => {
+    try {
+      const d = JSON.parse(rd.result);
+      if (!Array.isArray(d.sessions) || !Array.isArray(d.profiles)) throw 0;
+      let n = 0;
+      const merge = (arr, items, test) => items.forEach(x => { if (x && x.id && test(x) && !arr.some(y => y.id === x.id)) { arr.push(x); if (arr === S.sessions) n++; } });
+      merge(S.profiles, d.profiles, x => typeof x.name === 'string');
+      merge(S.decks, d.decks || [], x => Array.isArray(x.cards) && !x.repo);
+      merge(S.sessions, d.sessions, x => Array.isArray(x.rounds));
+      save();
+      msg.textContent = `Import fertig: ${n} neue Runs übernommen.`;
+      setTimeout(render, 1200);
+    } catch (e) { msg.textContent = 'Die Datei konnte nicht gelesen werden. Wähle einen Export aus dieser App.'; }
+  };
+  rd.readAsText(file);
+}
+
+/* ---------- Profile & Einstellungen ---------- */
+function vProfiles() {
+  return top('<span></span>') + `<h1>Wer lernt?</h1>
+  ${S.profiles.map(p => `<div class="prof ${p.id === S.active ? 'on' : ''}">
+    ${renId === p.id
+      ? `<input id="ren-in" value="${esc(p.name)}" aria-label="Neuer Name" style="flex:1"><button class="chip" data-act="renSave" data-id="${esc(p.id)}">OK</button>`
+      : `<button class="name" data-act="pick" data-id="${esc(p.id)}" aria-pressed="${p.id === S.active}">${p.id === S.active ? '<b>' + esc(p.name) + '</b> <span class="mut">· aktiv</span>' : esc(p.name)}</button>
+         <button class="chip" data-act="ren" data-id="${esc(p.id)}">Umbenennen</button>
+         ${S.profiles.length > 1 ? `<button class="chip" data-act="delP" data-id="${esc(p.id)}">${confirmKey === 'p' + p.id ? 'Sicher?' : 'Löschen'}</button>` : ''}`}
+  </div>`).join('')}
+  <label for="np">Neues Profil</label>
+  <form class="row2" id="npf"><input id="np" placeholder="Name, z. B. Mia" autocomplete="off"><button class="btn" style="flex:none;width:auto">Anlegen</button></form>
+  <div class="err" id="nperr" role="alert"></div>
+  <h2 style="margin-top:34px">Einstellungen</h2>
+  <label for="typo">Wenn ein Buchstabe falsch oder vertauscht ist</label>
+  <select id="typo"><option value="retry">„Fast richtig“ anzeigen und zweiter Versuch</option><option value="accept">Als richtig werten und Schreibweise zeigen</option></select>
+  <p class="mut">Groß- und Kleinschreibung, Satzzeichen, Artikel (der/die/das, the, to) und ae/ä werden immer toleriert.</p>`;
+}
+
+/* ---------- Events ---------- */
+app.addEventListener('click', e => {
+  const b = e.target.closest('[data-act]');
+  if (!b) return;
+  const a = b.dataset.act, id = b.dataset.id;
+  if (a !== 'delDeck' && a !== 'delP') confirmKey = null;
+  switch (a) {
+    case 'tab': view = b.dataset.k; renId = null; render(); break;
+    case 'sel': selDeck = id; render(); break;
+    case 'dir': dirMode = b.dataset.k; render(); break;
+    case 'new': editId = null; view = 'edit'; render(); break;
+    case 'edit': editId = id; view = 'edit'; render(); break;
+    case 'sample': $('#f-list').value = SAMPLE; if (!$('#f-name').value) $('#f-name').value = 'Beispiel Englisch'; $('#f-list').dispatchEvent(new Event('input')); break;
+    case 'saveDeck': {
+      const cards = parseList($('#f-list').value), name = $('#f-name').value.trim();
+      if (!name) { $('#f-err').textContent = 'Gib der Liste einen Namen.'; $('#f-name').focus(); return; }
+      if (!cards.length) { $('#f-err').textContent = 'Keine Vokabeln erkannt. Schreib pro Zeile: Wort; Übersetzung'; $('#f-list').focus(); return; }
+      const obj = {name, la: $('#f-la').value.trim() || 'Sprache 1', lb: $('#f-lb').value.trim() || 'Sprache 2', cards};
+      const d = editId && deckById(editId);
+      if (d) Object.assign(d, obj); else { const nd = {id: uid(), ...obj}; S.decks.push(nd); selDeck = nd.id; }
+      save(); view = 'home'; render(); break;
+    }
+    case 'delDeck':
+      if (confirmKey === 'd' + editId) { S.decks = S.decks.filter(d => d.id !== editId); confirmKey = null; save(); view = 'home'; render(); }
+      else { confirmKey = 'd' + editId; render(); }
+      break;
+    case 'start': startRun(); break;
+    case 'qmain': qmain(); break;
+    case 'dunno': dunno(); break;
+    case 'quit': endRun(); break;
+    case 'nextRound': nextRound(); break;
+    case 'endRun': endRun(); break;
+    case 'export': doExport(); break;
+    case 'copy': {
+      const ta = $('#expt');
+      Promise.resolve().then(() => navigator.clipboard.writeText(ta.value)).then(() => { b.textContent = 'Kopiert'; }, () => { ta.focus(); ta.select(); b.textContent = 'Text markiert – jetzt kopieren'; });
+      break;
+    }
+    case 'pick': S.active = id; save(); render(); break;
+    case 'ren': { renId = id; render(); const ri = $('#ren-in'); ri.focus(); ri.select(); break; }
+    case 'renSave': { const v = $('#ren-in').value.trim(); const p = S.profiles.find(x => x.id === id); if (v && p) p.name = v; renId = null; save(); render(); break; }
+    case 'delP':
+      if (confirmKey === 'p' + id) {
+        S.profiles = S.profiles.filter(p => p.id !== id); S.sessions = S.sessions.filter(s => s.profile !== id);
+        if (S.active === id) S.active = S.profiles[0].id;
+        confirmKey = null; save(); render();
+      } else { confirmKey = 'p' + id; render(); }
+      break;
+  }
+});
+app.addEventListener('submit', e => {
+  e.preventDefault();
+  if (e.target.id === 'qf') qmain();
+  if (e.target.id === 'npf') {
+    const v = $('#np').value.trim();
+    if (!v) { $('#nperr').textContent = 'Gib einen Namen ein.'; $('#np').focus(); return; }
+    const p = {id: uid(), name: v}; S.profiles.push(p); S.active = p.id; save(); render();
+  }
+});
+app.addEventListener('change', e => {
+  if (e.target.id === 'typo') { S.settings.typo = e.target.value; save(); }
+  if (e.target.id === 'imp' && e.target.files[0]) doImport(e.target.files[0]);
+});
+app.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && e.target.id === 'ren-in') { e.preventDefault(); app.querySelector('[data-act=renSave]').click(); }
+});
+document.addEventListener('keydown', e => {
+  if (view === 'quiz' && Q && Q.done && e.key === 'Enter' && e.target.id !== 'ans') { e.preventDefault(); nextTask(); }
+});
+
+/* ---------- Start ---------- */
+(async () => {
+  await loadRepoDecks();
+  if (!S.decks.length) S.decks.push({id: uid(), name: 'Beispiel Englisch', la: 'Deutsch', lb: 'Englisch', cards: parseList(SAMPLE)});
+  save(); render();
+  try { if ('serviceWorker' in navigator && window.top === window && location.protocol === 'https:') navigator.serviceWorker.register('sw.js').catch(() => {}); } catch (e) {}
+})();
+}
+</script>
+</body>
+</html>
