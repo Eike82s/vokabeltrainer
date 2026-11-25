@@ -224,7 +224,9 @@ function vLists() {
     : '<p class="mut">Keine aktuellen Listen.</p>'}
   <h2>Archiv</h2>
   ${arch.length ? arch.map(d => `<div class="lcard arch"><b>${esc(d.name)}</b><small class="mut">${meta(d)}${d.archivedAt ? ' · archiviert am ' + esc(new Date(d.archivedAt).toLocaleDateString('de-DE')) : ''}</small>
-    <div class="acts"><button class="btn sm" data-act="restore" data-id="${esc(d.id)}">Wiederherstellen</button><button class="btn sm danger" data-act="del" data-id="${esc(d.id)}">${confirmKey === 'd' + d.id ? 'Wirklich löschen?' : 'Endgültig löschen'}</button></div></div>`).join('')
+    <div class="acts">${confirmKey === 'd' + d.id
+      ? `<button class="btn sm" data-act="nodel">Nicht löschen</button><button class="btn sm danger" data-act="del" data-id="${esc(d.id)}">Wirklich löschen</button>`
+      : `<button class="btn sm" data-act="restore" data-id="${esc(d.id)}">Wiederherstellen</button><button class="btn sm danger" data-act="del" data-id="${esc(d.id)}">Endgültig löschen</button>`}</div></div>`).join('')
     + '<p class="mut">Archivierte Listen erscheinen nicht unter „Lernen“. Beim endgültigen Löschen bleibt die Statistik erhalten.</p>'
     : '<p class="mut">Das Archiv ist leer.</p>'}`;
 }
@@ -481,6 +483,7 @@ app.addEventListener('click', e => {
       if (confirmKey === 'd' + id) { S.decks = S.decks.filter(d => d.id !== id); confirmKey = null; save(); }
       else confirmKey = 'd' + id;
       render(); break;
+    case 'nodel': render(); break;
     case 'start': startRun(); break;
     case 'qmain': qmain(); break;
     case 'dunno': dunno(); break;
