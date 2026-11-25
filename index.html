@@ -50,8 +50,8 @@ input[type=file]{font-size:15px;padding:10px}
 textarea{min-height:220px;font-size:16px;line-height:1.5;resize:vertical}
 .bar{height:6px;background:var(--card);border-radius:3px;overflow:hidden;margin-top:6px}
 .bar i{display:block;height:100%;background:var(--acc);transition:width .3s ease}
-.q-dir{margin-top:clamp(24px,7vh,56px);font-size:14px;color:var(--mut);text-align:center;letter-spacing:.02em}
-.q-word{font-size:clamp(30px,9vw,44px);line-height:1.12;font-weight:700;text-align:center;margin:10px 0 clamp(22px,5vh,40px);overflow-wrap:anywhere;text-wrap:balance}
+.q-dir{margin-top:clamp(14px,4vh,40px);font-size:14px;color:var(--mut);text-align:center;letter-spacing:.02em}
+.q-word{font-size:clamp(30px,9vw,44px);line-height:1.12;font-weight:700;text-align:center;margin:8px 0 clamp(16px,3vh,28px);overflow-wrap:anywhere;text-wrap:balance}
 .ans{font-size:21px;padding:14px 16px;text-align:center;border-width:2px}
 .ans:focus-visible{outline:none;border-color:var(--acc)}.ans.ok{border-color:var(--ok)}.ans.bad{border-color:var(--bad)}.ans.warn{border-color:var(--warn)}
 .fb{border-radius:12px;padding:12px 14px;margin-top:12px;font-size:16px;animation:pop .2s ease}
@@ -60,6 +60,8 @@ textarea{min-height:220px;font-size:16px;line-height:1.5;resize:vertical}
 @keyframes pop{from{transform:translateY(4px);opacity:0}to{transform:none;opacity:1}}
 .err{color:var(--bad);font-size:14px;margin-top:6px;min-height:0}
 .grow{flex:1;min-height:20px}
+.qbtns{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px;margin-top:12px}.qbtns .btn+.btn{margin-top:0}
+.ans.done{caret-color:transparent}
 .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 .kpi{background:var(--card);border-radius:12px;padding:12px 14px}
 .kpi small{display:block;color:var(--mut);font-size:13px}.kpi b{font-size:26px}
@@ -155,10 +157,11 @@ const ab = n => ABBR[String(n || '').toLowerCase()] || String(n || '?').slice(0,
 const dirLabel = (d, deck) => d === 'ab' ? ab(deck.la) + ' → ' + ab(deck.lb) : ab(deck.lb) + ' → ' + ab(deck.la);
 
 /* ---------- Antwortprüfung ---------- */
-const ART = /^(der|die|das|den|dem|des|ein|eine|einen|einem|einer|the|a|an|to)\s+/;
-function norm(s) {
-  s = String(s).toLowerCase().normalize('NFC')
-    .replace(/ä/g, 'ae').replace(/ö/g, 'oe').replace(/ü/g, 'ue').replace(/ß/g, 'ss')
+const ART = /^(der|die|das|den|dem|des|ein|eine|einen|einem|einer|the|a|an|to)\s+/i;
+function norm(s, keepCase) {
+  s = String(s).normalize('NFC');
+  if (!keepCase) s = s.toLowerCase();
+  s = s.replace(/ä/g, 'ae').replace(/ö/g, 'oe').replace(/ü/g, 'ue').replace(/Ä/g, 'Ae').replace(/Ö/g, 'Oe').replace(/Ü/g, 'Ue').replace(/ß/g, 'ss')
     .replace(/\([^)]*\)/g, ' ')
     .replace(/[.,!?;:"'„“”‚‘’`´()\[\]]/g, ' ')
     .replace(/\s+/g, ' ').trim();
@@ -166,7 +169,7 @@ function norm(s) {
   do { prev = s; s = s.replace(ART, ''); } while (s !== prev);
   return s;
 }
-const variants = s => String(s).split('/').map(norm).filter(Boolean);
+const variants = s => String(s).split('/').map(v => norm(v, true)).filter(Boolean);
 function dist(a, b) {
   const m = a.length, n = b.length, d = [];
   for (let i = 0; i <= m; i++) { d[i] = [i]; }
@@ -179,9 +182,10 @@ function dist(a, b) {
   return d[m][n];
 }
 function check(input, accepted) {
-  const n = norm(input);
+  const n = norm(input, true), nl = n.toLowerCase(), low = accepted.map(v => v.toLowerCase());
   if (accepted.includes(n)) return 'ok';
-  if (accepted.some(v => v.length >= 4 && Math.abs(v.length - n.length) <= 1 && dist(v, n) <= 1)) return 'typo';
+  if (low.includes(nl)) return 'case';
+  if (low.some(v => v.length >= 4 && Math.abs(v.length - nl.length) <= 1 && dist(v, nl) <= 1)) return 'typo';
   return 'wrong';
 }
 
@@ -237,7 +241,7 @@ function vEdit() {
   <label for="f-list">Vokabeln – eine pro Zeile, getrennt durch ; oder Tab</label>
   <textarea id="f-list" placeholder="Schmetterling; butterfly&#10;Gewohnheit; habit" autocapitalize="off" autocorrect="off" spellcheck="false">${esc(text)}</textarea>
   <p class="mut" id="f-info"></p>
-  <p class="mut">Mehrere richtige Antworten mit / trennen: <i>ungefähr; about/approximately</i>. Teile in Klammern sind optional: <i>(sich) erinnern</i>. Artikel wie der/die/das, the und to muss man nicht mittippen.</p>
+  <p class="mut">Mehrere richtige Antworten mit / trennen: <i>ungefähr; about/approximately</i>. Teile in Klammern sind optional: <i>(sich) erinnern</i>. Artikel wie der/die/das, the und to muss man nicht mittippen. Groß- und Kleinschreibung zählt, also Nomen groß schreiben.</p>
   <div class="err" id="f-err" role="alert"></div>
   <div class="grow"></div>
   <button class="btn pri" data-act="saveDeck">Speichern</button>
@@ -285,10 +289,10 @@ function vQuiz() {
   <div class="q-word" id="q-word"></div>
   <form id="qf" autocomplete="off" novalidate><input id="ans" class="ans" aria-label="Deine Antwort" placeholder="Antwort eingeben" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" enterkeyhint="go"></form>
   <div class="err" id="qerr" role="alert"></div>
+  <div class="qbtns"><button class="btn pri" id="qbtn" data-act="qmain" type="button">Prüfen</button>
+  <button class="btn" id="qdk" data-act="dunno" type="button">Ich weiß es nicht</button></div>
   <div id="fb" aria-live="polite"></div>
-  <div class="grow"></div>
-  <button class="btn pri" id="qbtn" data-act="qmain">Prüfen</button>
-  <button class="btn" id="qdk" data-act="dunno">Ich weiß es nicht</button>`;
+  <p class="mut" id="q-hint" style="text-align:center;margin-top:18px">Tastatur weg? Tippe aufs Eingabefeld.</p>`;
 }
 function fillTask() {
   const t = Q.tasks[Q.pos];
@@ -297,7 +301,7 @@ function fillTask() {
   $('#q-dir').textContent = dirLabel(t.d, Q.deck) + ' · übersetze';
   $('#q-word').textContent = promptOf(t);
   const inp = $('#ans');
-  inp.value = ''; inp.readOnly = false; inp.className = 'ans';
+  inp.value = ''; inp.className = 'ans';
   $('#fb').innerHTML = ''; $('#qerr').textContent = '';
   $('#qbtn').textContent = 'Prüfen';
   $('#qdk').classList.remove('hidden');
@@ -314,7 +318,8 @@ function qmain() {
   const t = Q.tasks[Q.pos];
   let r = check(val, accepted(t));
   Q.given.push(val.trim());
-  if (r === 'typo' && S.settings.typo === 'accept') r = 'okTypo';
+  const near = r === 'typo' || r === 'case';
+  if (near && S.settings.typo === 'accept') r = 'okTypo';
   if (r === 'ok' || r === 'okTypo') {
     const s = Q.attempt === 0 ? 1 : 3;
     const msg = r === 'okTypo' ? 'Als richtig gewertet. So schreibt man es:' : (s === 1 ? 'Richtig!' : 'Richtig – im zweiten Versuch.');
@@ -324,8 +329,8 @@ function qmain() {
   }
   if (Q.attempt === 0) {
     Q.attempt = 1;
-    $('#fb').innerHTML = fb(r === 'typo' ? 'warn' : 'bad', r === 'typo' ? 'Fast! Da steckt ein Tippfehler drin. Noch ein Versuch.' : 'Nicht ganz. Du hast noch einen Versuch.');
-    inp.className = 'ans ' + (r === 'typo' ? 'warn' : 'bad');
+    $('#fb').innerHTML = fb(near ? 'warn' : 'bad', r === 'case' ? 'Fast! Achte auf Groß- und Kleinschreibung. Noch ein Versuch.' : r === 'typo' ? 'Fast! Da steckt ein Tippfehler drin. Noch ein Versuch.' : 'Nicht ganz. Du hast noch einen Versuch.');
+    inp.className = 'ans ' + (near ? 'warn' : 'bad');
     inp.select();
     return;
   }
@@ -342,11 +347,10 @@ function finishTask(s, html, cls) {
   Q.ses.rounds[Q.round - 1].push({i: t.i, d: t.d, p: promptOf(t), a: solution(t), g: Q.given.slice(), s});
   save();
   const inp = $('#ans');
-  inp.readOnly = true; inp.className = 'ans ' + cls;
+  inp.className = 'ans done ' + cls;
   $('#fb').innerHTML = html;
   $('#qbtn').textContent = Q.pos + 1 < Q.tasks.length ? 'Weiter' : 'Zur Auswertung';
   $('#qdk').classList.add('hidden');
-  inp.focus({preventScroll: true});
 }
 function nextTask() {
   clearTimeout(autoTimer);
@@ -454,13 +458,17 @@ function vProfiles() {
   <form class="row2" id="npf"><input id="np" placeholder="Name, z. B. Mia" autocomplete="off"><button class="btn" style="flex:none;width:auto">Anlegen</button></form>
   <div class="err" id="nperr" role="alert"></div>
   <h2 style="margin-top:34px">Einstellungen</h2>
-  <label for="typo">Wenn ein Buchstabe falsch oder vertauscht ist</label>
+  <label for="typo">Wenn nur ein Buchstabe oder die Groß-/Kleinschreibung falsch ist</label>
   <select id="typo"><option value="retry">„Fast richtig“ anzeigen und zweiter Versuch</option><option value="accept">Als richtig werten und Schreibweise zeigen</option></select>
-  <p class="mut">Groß- und Kleinschreibung, Satzzeichen, Artikel (der/die/das, the, to) und ae/ä werden immer toleriert.</p>`;
+  <p class="mut">Satzzeichen, Artikel (der/die/das, the, to) und ae statt ä werden immer toleriert.</p>`;
 }
 
 /* ---------- Events ---------- */
 app.addEventListener('click', e => {
+  if (view === 'quiz' && Q) {
+    const inp = $('#ans'), act = e.target.closest('[data-act]')?.dataset.act;
+    if (inp && act !== 'quit') inp.focus({preventScroll: true});
+  }
   const b = e.target.closest('[data-act]');
   if (!b) return;
   const a = b.dataset.act, id = b.dataset.id;
@@ -521,6 +529,12 @@ app.addEventListener('submit', e => {
 app.addEventListener('change', e => {
   if (e.target.id === 'typo') { S.settings.typo = e.target.value; save(); }
   if (e.target.id === 'imp' && e.target.files[0]) doImport(e.target.files[0]);
+});
+app.addEventListener('mousedown', e => {
+  if (view === 'quiz' && e.target.closest('#qbtn,#qdk')) e.preventDefault();
+});
+app.addEventListener('beforeinput', e => {
+  if (view === 'quiz' && Q && Q.done && e.target.id === 'ans' && !/LineBreak|Paragraph/.test(e.inputType)) e.preventDefault();
 });
 app.addEventListener('keydown', e => {
   if (e.key === 'Enter' && e.target.id === 'ren-in') { e.preventDefault(); app.querySelector('[data-act=renSave]').click(); }
